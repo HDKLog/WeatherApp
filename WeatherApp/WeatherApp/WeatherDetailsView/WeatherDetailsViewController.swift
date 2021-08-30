@@ -13,6 +13,8 @@ protocol WeatherDetailsView {
 
 class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UICollectionViewDataSource {
     
+    var presenter: WeatherDetailsPresentation!
+    
     let titleLabel = UILabel()
     
     let descriptionView = WeatherDescriptionView()
@@ -43,6 +45,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         
         let icon = UIImage(named: "icon-weather-today")
         self.tabBarItem = UITabBarItem(title: "Today", image: icon, tag: 0)
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Setup Subviews
@@ -96,6 +99,9 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         descriptionView.configure(with: model.weatherDescription)
         parameters = model.wetherParameters
         shareView.configure(with: "Share")
+        shareView.buttonAction = { [weak self] button in
+            self?.presenter?.shareWether()
+        }
     }
     
     // MARK: - UICollectionViewDataSource conformance

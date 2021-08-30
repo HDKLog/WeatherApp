@@ -22,28 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             
+            let rooter = WeatherAppRouter()
             let rootViewControler = WeatherDetailsViewController()
+            let presenter = WeatherDetailsPresenter(view: rootViewControler, rooter: rooter)
+            rootViewControler.presenter = presenter
             
-            let navController = UINavigationController(rootViewController: rootViewControler)
-            let tapBarController = UITabBarController()
-            tapBarController.viewControllers = [navController]
-            window.rootViewController = tapBarController
+            rooter.viewControllers = [UINavigationController(rootViewController: rootViewControler)]
+            
+            window.rootViewController = rooter
             self.window = window
             window.makeKeyAndVisible()
-            
-            let parameters = [WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-4-cloud-rain"), description: "49%"),
-                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-63-raindrop"), description: "-"),
-                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-100-pressure-reading"), description: "1032 hPa"),
-                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-13-cloud-wind"), description: "3.6 km/h"),
-                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-90-compass"), description: "S")]
-            
-            let weatherDescription = WeatherDescriptionViewModel(weatherImage: nil,
-                                                                 locationDescription: "Meria, GE",
-                                                                 weatherDescription: "20^ | Clear Sky")
-            let model = WeatherDetailsViewModel(title: "a title",
-                                                weatherDescription: weatherDescription,
-                                                wetherParameters: parameters)
-            rootViewControler.configure(with: model)
         }
     }
 

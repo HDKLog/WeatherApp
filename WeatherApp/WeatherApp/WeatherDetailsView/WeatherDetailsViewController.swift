@@ -7,7 +7,11 @@
 
 import UIKit
 
-class WeatherDetailsViewController: UIViewController, UICollectionViewDataSource {
+protocol WeatherDetailsView {
+    func configure(with model: WeatherDetailsViewModel)
+}
+
+class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UICollectionViewDataSource {
     
     let titleLabel = UILabel()
     
@@ -31,7 +35,7 @@ class WeatherDetailsViewController: UIViewController, UICollectionViewDataSource
     
     var parameters: [WeatherPropertyCellViewModel] = []
     
-
+    // MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -41,6 +45,7 @@ class WeatherDetailsViewController: UIViewController, UICollectionViewDataSource
         self.tabBarItem = UITabBarItem(title: "Today", image: icon, tag: 0)
     }
     
+    // MARK: - Setup Subviews
     private func setupView() {
         view.backgroundColor = UIColor(named: "color-background-main")
     }
@@ -59,8 +64,6 @@ class WeatherDetailsViewController: UIViewController, UICollectionViewDataSource
     
     private func setupDescriptionView() {
         stackView.addArrangedSubview(descriptionView)
-        descriptionView.backgroundColor = .red
-        
     }
     
     private func setupStackView() {
@@ -87,13 +90,15 @@ class WeatherDetailsViewController: UIViewController, UICollectionViewDataSource
         stackView.addArrangedSubview(shareView)
     }
     
+    // MARK: - WeatherDetailsView conformance
     public func configure( with model: WeatherDetailsViewModel) {
         titleLabel.text = model.title
         descriptionView.configure(with: model.weatherDescription)
         parameters = model.wetherParameters
+        shareView.configure(with: "Share")
     }
     
-    // MARK: -
+    // MARK: - UICollectionViewDataSource conformance
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return parameters.count
     }

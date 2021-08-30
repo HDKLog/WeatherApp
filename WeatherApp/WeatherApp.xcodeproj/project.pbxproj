@@ -21,7 +21,7 @@
 		39FCEA3D26DC2EDE0046E545 /* CenterAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCEA3C26DC2EDE0046E545 /* CenterAlignedCollectionViewFlowLayout.swift */; };
 		39FCEA3F26DC3E390046E545 /* WeatherDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCEA3E26DC3E390046E545 /* WeatherDescriptionView.swift */; };
 		39FCEA4126DC3F5A0046E545 /* WeatherDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCEA4026DC3F5A0046E545 /* WeatherDescriptionViewModel.swift */; };
-		39FCEA4926DCB1DA0046E545 /* ShareButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCEA4826DCB1DA0046E545 /* ShareButtonView.swift */; };
+		39FCEA4926DCB1DA0046E545 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCEA4826DCB1DA0046E545 /* ShareView.swift */; };
 		A2FD300B1ABF0765AA43BCBF /* Pods_WeatherApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 500D3773D8E04F9D7EC5A759 /* Pods_WeatherApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +55,7 @@
 		39FCEA3E26DC3E390046E545 /* WeatherDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDescriptionView.swift; sourceTree = "<group>"; };
 		39FCEA4026DC3F5A0046E545 /* WeatherDescriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDescriptionViewModel.swift; sourceTree = "<group>"; };
 		39FCEA4526DCB1290046E545 /* WeatherDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetailsViewController.swift; sourceTree = "<group>"; };
-		39FCEA4826DCB1DA0046E545 /* ShareButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButtonView.swift; sourceTree = "<group>"; };
+		39FCEA4826DCB1DA0046E545 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		500D3773D8E04F9D7EC5A759 /* Pods_WeatherApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3E28683B1EAC7CCFB35A84F /* Pods-WeatherApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.debug.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,7 +137,7 @@
 				39FCEA3C26DC2EDE0046E545 /* CenterAlignedCollectionViewFlowLayout.swift */,
 				39FCEA4626DCB1490046E545 /* Cells */,
 				39FCEA4726DCB1740046E545 /* DescriptionView */,
-				39FCEA4826DCB1DA0046E545 /* ShareButtonView.swift */,
+				39FCEA4826DCB1DA0046E545 /* ShareView.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -341,7 +341,7 @@
 				39FCE8EA26D6D8710046E545 /* SceneDelegate.swift in Sources */,
 				39FCEA3B26DB99DF0046E545 /* WeatherPropertyCellViewModel.swift in Sources */,
 				39FCEA3F26DC3E390046E545 /* WeatherDescriptionView.swift in Sources */,
-				39FCEA4926DCB1DA0046E545 /* ShareButtonView.swift in Sources */,
+				39FCEA4926DCB1DA0046E545 /* ShareView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

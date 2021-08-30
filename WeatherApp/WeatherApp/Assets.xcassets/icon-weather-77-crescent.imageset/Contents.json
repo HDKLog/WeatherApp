@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-weather-77-crescent.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

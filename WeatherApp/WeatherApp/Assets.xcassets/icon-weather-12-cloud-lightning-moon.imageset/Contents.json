@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-weather-12-cloud-lightning-moon.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

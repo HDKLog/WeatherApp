@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-weather-78-stars.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

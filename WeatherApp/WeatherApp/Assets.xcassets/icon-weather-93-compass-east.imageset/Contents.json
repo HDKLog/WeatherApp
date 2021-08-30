@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-weather-93-compass-east.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

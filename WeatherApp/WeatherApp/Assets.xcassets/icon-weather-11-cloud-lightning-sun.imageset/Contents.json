@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-weather-11-cloud-lightning-sun.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

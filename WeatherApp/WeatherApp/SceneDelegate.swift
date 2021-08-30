@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -20,9 +21,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = ViewController()
+            
+            let rootViewControler = WeatherDetailsViewController()
+            
+            let navController = UINavigationController(rootViewController: rootViewControler)
+            let tapBarController = UITabBarController()
+            tapBarController.viewControllers = [navController]
+            window.rootViewController = tapBarController
             self.window = window
             window.makeKeyAndVisible()
+            
+            let parameters = [WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-4-cloud-rain"), description: "49%"),
+                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-63-raindrop"), description: "-"),
+                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-100-pressure-reading"), description: "1032 hPa"),
+                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-13-cloud-wind"), description: "3.6 km/h"),
+                              WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-90-compass"), description: "S")]
+            
+            let weatherDescription = WeatherDescriptionViewModel(weatherImage: nil,
+                                                                 locationDescription: "Meria, GE",
+                                                                 weatherDescription: "20^ | Clear Sky")
+            let model = WeatherDetailsViewModel(title: "a title",
+                                                weatherDescription: weatherDescription,
+                                                wetherParameters: parameters)
+            rootViewControler.configure(with: model)
         }
     }
 

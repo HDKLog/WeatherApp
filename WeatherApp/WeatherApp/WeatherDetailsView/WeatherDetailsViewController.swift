@@ -9,13 +9,18 @@ import UIKit
 
 protocol WeatherDetailsView {
     func configure(with model: WeatherDetailsViewModel)
+    func displayError(error: Error)
 }
 
 class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UICollectionViewDataSource {
     
     var presenter: WeatherDetailsPresentation!
     
-    let titleLabel = UILabel()
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     let descriptionView = WeatherDescriptionView()
     
@@ -37,14 +42,18 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     
     var parameters: [WeatherPropertyCellViewModel] = []
     
+    convenience init() {
+        self.init(nibName: nil, bundle: nil)
+        
+        let icon = UIImage(named: "icon-weather-today")
+        self.tabBarItem = UITabBarItem(title: "Today", image: icon, selectedImage: icon)
+    }
+    
     // MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupSubviews()
-        
-        let icon = UIImage(named: "icon-weather-today")
-        self.tabBarItem = UITabBarItem(title: "Today", image: icon, tag: 0)
         presenter?.viewDidLoad()
     }
     
@@ -97,11 +106,20 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     public func configure( with model: WeatherDetailsViewModel) {
         titleLabel.text = model.title
         descriptionView.configure(with: model.weatherDescription)
-        parameters = model.wetherParameters
+        configureWeatherParameters(parameters: model.wetherParameters)
         shareView.configure(with: "Share")
         shareView.buttonAction = { [weak self] button in
             self?.presenter?.shareWether()
         }
+    }
+    
+    func configureWeatherParameters(parameters: [WeatherPropertyCellViewModel]) {
+        self.parameters = parameters
+        parametersView.reloadData()
+    }
+    
+    func displayError(error: Error) {
+        print("\(error.localizedDescription)")
     }
     
     // MARK: - UICollectionViewDataSource conformance

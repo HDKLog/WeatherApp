@@ -15,28 +15,63 @@ protocol WeatherDetailsPresentation {
 class WeatherDetailsPresenter: WeatherDetailsPresentation {
     
     var view: WeatherDetailsView!
-    var rooter: WeatherAppRoutering!
+    var router: WeatherAppRoutering!
     
-    init(view: WeatherDetailsView, rooter: WeatherAppRoutering) {
+    let weatherDetailUsecases = WeatherDetailsUseCase()
+    
+    init(view: WeatherDetailsView, router: WeatherAppRoutering) {
         self.view = view
-        self.rooter = rooter
+        self.router = router
     }
     
     func viewDidLoad() {
         
-        let parameters = [WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-4-cloud-rain"), description: "49%"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-63-raindrop"), description: "-"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-100-pressure-reading"), description: "1032 hPa"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-13-cloud-wind"), description: "3.6 km/h"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-90-compass"), description: "S")]
+        let coordinates = GeographicWeather.Coordinates(latitude: 41.695014, longitude: 44.830604)
+        weatherDetailUsecases.getGeographicWeather(for: coordinates) { [weak self]result in
+            switch result {
+            case .success(let weatherEntity):
+                self?.handle(entity:weatherEntity)
+                
+            case .failure(let error):
+                self?.view.displayError(error: error)
+            }
+        }
+    }
+    
+    func  handle(entity: GeographicWeather) {
         
-        let weatherDescription = WeatherDescriptionViewModel(weatherImage: nil,
-                                                             locationDescription: "Meria, GE",
-                                                             weatherDescription: "20^ | Clear Sky")
-        let model = WeatherDetailsViewModel(title: "a title",
-                                            weatherDescription: weatherDescription,
-                                            wetherParameters: parameters)
-        view.configure(with: model)
+        let parameters = [WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-4-cloud-rain"),
+                                                       description: "\(entity.main.humidity)%"),
+                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-63-raindrop"),
+                                                       description: "-"),
+                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-100-pressure-reading"),
+                                                       description: "\(entity.main.pressure) hPa"),
+                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-13-cloud-wind"),
+                                                       description: "\(entity.wind.speed) km/h"),
+                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-90-compass"),
+                                                       description: "\(entity.wind.degrees)")]
+        
+        weatherDetailUsecases.getIcon(named: entity.weather.first?.icon ?? "" ) {[weak self] result in
+            
+            var image: UIImage?
+            switch result {
+            case .success(let data):
+                image = UIImage(data: data)
+            case .failure(let error):
+                self?.view.displayError(error: error)
+            }
+            
+            let firstDescription = entity.weather.first?.description ?? "-"
+            let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()
+            let weatherDescription = WeatherDescriptionViewModel(weatherImage: image,
+                                                                 locationDescription: "\(entity.name), \(entity.system.country)",
+                                                                 weatherDescription: "\(Int(entity.main.temperature))° | \(description)")
+            let model = WeatherDetailsViewModel(title: "Today",
+                                                weatherDescription: weatherDescription,
+                                                wetherParameters: parameters)
+            self?.view.configure(with: model)
+            
+        }
     }
     
     func shareWether() {

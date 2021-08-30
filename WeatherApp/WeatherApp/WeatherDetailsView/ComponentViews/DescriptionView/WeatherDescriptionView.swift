@@ -31,7 +31,7 @@ class WeatherDescriptionView: UIView {
     
     private func setupWeatherImageView() {
         self.addSubview(weatherImage)
-        weatherImage.backgroundColor = .cyan
+        //weatherImage.backgroundColor = .cyan
         weatherImage.translatesAutoresizingMaskIntoConstraints = false
         
         let portraitConstraints = [

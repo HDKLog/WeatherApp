@@ -22,14 +22,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             
-            let rooter = WeatherAppRouter()
+            let router = WeatherAppRouter()
             let rootViewControler = WeatherDetailsViewController()
-            let presenter = WeatherDetailsPresenter(view: rootViewControler, rooter: rooter)
+            let presenter = WeatherDetailsPresenter(view: rootViewControler, router: router)
             rootViewControler.presenter = presenter
             
-            rooter.viewControllers = [UINavigationController(rootViewController: rootViewControler)]
+            let forecastViewController = WeatherForecastViewController()
+            let forecastPresenter = WeatherForecastPresenter(view: forecastViewController, router: router)
+            forecastViewController.presenter = forecastPresenter
             
-            window.rootViewController = rooter
+            router.viewControllers = [
+                UINavigationController(rootViewController: rootViewControler),
+                UINavigationController(rootViewController: forecastViewController)
+            ]
+            
+            window.rootViewController = router
             self.window = window
             window.makeKeyAndVisible()
         }

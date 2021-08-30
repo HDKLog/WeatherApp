@@ -13,9 +13,11 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     func test_viewController_renderTitleForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: nil,
+                                                           locationDescription: "a description",
+                                                           weatherDescription: "a weather")
         let model = WeatherDetailsViewModel(title: "a title",
-                                            locationDescription: "a description",
-                                            wetherDescription: "a weather",
+                                            weatherDescription: descriptionModel,
                                             wetherParameters: [])
         sut.configure(with: model)
         
@@ -25,25 +27,29 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     func test_viewController_renderLocationDescriptionForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: nil,
+                                                           locationDescription: "a description",
+                                                           weatherDescription: "a weather")
         let model = WeatherDetailsViewModel(title: "a title",
-                                            locationDescription: "a description",
-                                            wetherDescription: "a weather",
+                                            weatherDescription: descriptionModel,
                                             wetherParameters: [])
         sut.configure(with: model)
         
-        XCTAssertEqual(sut.locationDescriptionLabel.text, "a description")
+        XCTAssertEqual(sut.descriptionView.locationDescriptionLabel.text, "a description")
     }
     
     func test_viewController_renderWeatherDescriptionForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: nil,
+                                                           locationDescription: "a description",
+                                                           weatherDescription: "a weather")
         let model = WeatherDetailsViewModel(title: "a title",
-                                            locationDescription: "a description",
-                                            wetherDescription: "a weather",
+                                            weatherDescription: descriptionModel,
                                             wetherParameters: [])
         sut.configure(with: model)
         
-        XCTAssertEqual(sut.weatherDescriptionLabel.text, "a weather")
+        XCTAssertEqual(sut.descriptionView.weatherDescriptionLabel.text, "a weather")
     }
 
 }

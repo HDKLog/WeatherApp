@@ -12,12 +12,12 @@ typealias LocationResult = (Result<CLLocationCoordinate2D, Error>) -> Void
 
 class WeatherAppLocationGateway: NSObject, CLLocationManagerDelegate {
     
+    static let locationDenied = NSError(domain: "com.weatherApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Please allow location service to get local weather"])
+    
     lazy var locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
-        locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.startUpdatingLocation()
         return locationManager
     }()
     
@@ -30,8 +30,11 @@ class WeatherAppLocationGateway: NSObject, CLLocationManagerDelegate {
     func getCurrentLocation(complition: @escaping LocationResult) {
         
         locationRequestResult.append(complition)
-        locationManager.stopUpdatingLocation()
-        locationManager.startUpdatingLocation()
+        locationManager.requestWhenInUseAuthorization()
+        if [CLAuthorizationStatus.authorizedAlways, CLAuthorizationStatus.authorizedWhenInUse].contains(CLLocationManager.authorizationStatus()) {
+            locationManager.stopUpdatingLocation()
+            locationManager.startUpdatingLocation()
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -48,5 +51,17 @@ class WeatherAppLocationGateway: NSObject, CLLocationManagerDelegate {
             result(.failure(error))
         }
         locationRequestResult.removeAll()
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if [CLAuthorizationStatus.authorizedAlways, CLAuthorizationStatus.authorizedWhenInUse].contains(CLLocationManager.authorizationStatus()) {
+            locationManager.stopUpdatingLocation()
+            locationManager.startUpdatingLocation()
+        } else if [CLAuthorizationStatus.denied, CLAuthorizationStatus.restricted].contains(CLLocationManager.authorizationStatus()) {
+            for result in locationRequestResult {
+                result(.failure(WeatherAppLocationGateway.locationDenied))
+            }
+            locationRequestResult.removeAll()
+        }
     }
 }

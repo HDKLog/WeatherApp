@@ -13,15 +13,18 @@ class WeatherForecastUseCase {
     
     let weatherDetailsGateway = WeatherDetailsGateway()
     
-    func getGeographicWeather(for coordinates: GeographicLocation, completionHandler: @escaping GeographicWeatherForecastResult) {
+    func getGeographicWeather(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherForecastResult) {
         
         weatherDetailsGateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
             switch result {
             case .success(let jsonData):
-                let model = try! JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData)
-                completionHandler(.success(model))
+                guard let model = try? JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData) else {
+                    completion(.failure(WeatherDetailsUseCase.parsingError))
+                    return
+                }
+                completion(.success(model))
             case .failure(let error):
-                completionHandler(.failure(error))
+                completion(.failure(error))
             }
         }
     }

@@ -43,6 +43,7 @@ struct DesignBook {
             static let action = ColorWrapper(name: "color-foreground-action")
             static let element = ColorWrapper(name: "color-foreground-element")
             static let inverse = ColorWrapper(name: "color-foreground-inverse")
+            static let light = ColorWrapper(name: "color-foreground-light")
         }
     }
 }

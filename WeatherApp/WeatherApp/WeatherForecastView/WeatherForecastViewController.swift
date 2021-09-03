@@ -19,6 +19,7 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
     
     let titleLabel: UILabel = {
         let label = UILabel()
+        label.textColor = DesignBook.Color.Foreground.light.uiColor()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

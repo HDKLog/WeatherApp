@@ -52,27 +52,29 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
                           WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.compass.uiImage(),
                                                        description: "\(entity.wind.degrees)")]
         
-        weatherAppIconsUseCase.getIcon(named: entity.weather.first?.icon ?? "" ) {[weak self] result in
+        let imageName = entity.weather.first!.icon
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { [weak self] handler in
             
-            var image: UIImage?
-            switch result {
-            case .success(let data):
-                image = UIImage(data: data)
-            case .failure(let error):
-                self?.view.displayError(error: error)
+            self?.weatherAppIconsUseCase.getIcon(named: imageName) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    handler(data)
+                case .failure(let error):
+                    self?.view.displayError(error: error)
+                }
             }
-            
-            let firstDescription = entity.weather.first?.description ?? "-"
-            let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()
-            let weatherDescription = WeatherDescriptionViewModel(weatherImage: image,
-                                                                 locationDescription: "\(entity.name), \(entity.system.country)",
-                                                                 weatherDescription: "\(Int(entity.main.temperature))° | \(description)")
-            let model = WeatherDetailsViewModel(title: "Today",
-                                                weatherDescription: weatherDescription,
-                                                wetherParameters: parameters)
-            self?.view.configure(with: model)
-            
         }
+        
+        let firstDescription = entity.weather.first?.description ?? "-"
+        let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()
+        let weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                             locationDescription: "\(entity.name), \(entity.system.country)",
+                                                             weatherDescription: "\(Int(entity.main.temperature))° | \(description)")
+        let model = WeatherDetailsViewModel(title: "Today",
+                                            weatherDescription: weatherDescription,
+                                            wetherParameters: parameters)
+        view.configure(with: model)
+            
     }
     
     func shareWether() {

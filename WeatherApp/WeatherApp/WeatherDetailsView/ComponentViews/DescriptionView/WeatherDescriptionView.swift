@@ -86,7 +86,10 @@ class WeatherDescriptionView: UIView {
     }
     
     func configure(with model:WeatherDescriptionViewModel) {
-        weatherImage.image = model.weatherImage
+        
+        model.weatherImage.requestClouser { [weak self] data in
+            self?.weatherImage.image = UIImage(data: data)
+        }
         locationDescriptionLabel.text = model.locationDescription
         weatherDescriptionLabel.text = model.weatherDescription
     }

@@ -11,7 +11,7 @@ class WeatherPropertyCollectionViewCell: UICollectionViewCell {
     
     let iconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.tintColor = .orange
+        imageView.tintColor = DesignBook.Color.Foreground.element.uiColor()
         return imageView
     }()
     

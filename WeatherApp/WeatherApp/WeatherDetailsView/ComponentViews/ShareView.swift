@@ -13,7 +13,7 @@ class ShareView: UIView {
     
     lazy var button: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.custom)
-        button.setTitleColor(.systemBlue, for: .normal)
+        button.setTitleColor(DesignBook.Color.Foreground.action.uiColor(), for: .normal)
         button.addTarget(self, action: #selector(shareDidTap), for: .touchUpInside)
         return button
     }()

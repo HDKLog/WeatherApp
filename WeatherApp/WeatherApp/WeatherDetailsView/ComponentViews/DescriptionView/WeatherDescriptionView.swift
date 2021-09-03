@@ -10,8 +10,19 @@ import UIKit
 class WeatherDescriptionView: UIView {
     
     let weatherImage = UIImageView()
-    let locationDescriptionLabel = UILabel()
-    let weatherDescriptionLabel = UILabel()
+    
+    let locationDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = DesignBook.Color.Foreground.inverse.uiColor()
+        return label
+    }()
+    
+    let weatherDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = DesignBook.Color.Foreground.highlited.uiColor()
+        label.font = UIFont.systemFont(ofSize: 23)
+        return label
+    }()
     
     var portraitLayoutConstraints: [NSLayoutConstraint] = []
     var landscapeLayoutConstraints: [NSLayoutConstraint] = []
@@ -26,7 +37,7 @@ class WeatherDescriptionView: UIView {
         setupWeatherImageView()
         setupLocationDescriptionLabel()
         setupWeatherDescriptionLabel()
-        NSLayoutConstraint.activate(landscapeLayoutConstraints)
+        NSLayoutConstraint.activate(portraitLayoutConstraints)
     }
     
     private func setupWeatherImageView() {
@@ -95,11 +106,12 @@ class WeatherDescriptionView: UIView {
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         
-        if traitCollection.horizontalSizeClass == .regular {
+        if traitCollection.horizontalSizeClass == .compact {
             NSLayoutConstraint.deactivate(landscapeLayoutConstraints)
             NSLayoutConstraint.activate(portraitLayoutConstraints)
-        } else if traitCollection.horizontalSizeClass == .compact {
+        } else if traitCollection.horizontalSizeClass == .regular {
             NSLayoutConstraint.deactivate(portraitLayoutConstraints)
             NSLayoutConstraint.activate(landscapeLayoutConstraints)
         }

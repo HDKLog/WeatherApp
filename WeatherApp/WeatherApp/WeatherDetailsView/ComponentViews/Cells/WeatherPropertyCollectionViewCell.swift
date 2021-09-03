@@ -8,7 +8,6 @@
 import UIKit
 
 class WeatherPropertyCollectionViewCell: UICollectionViewCell {
-    static let resuableId = "WeatherPropertyCell"
     
     let iconView: UIImageView = {
         let imageView = UIImageView()

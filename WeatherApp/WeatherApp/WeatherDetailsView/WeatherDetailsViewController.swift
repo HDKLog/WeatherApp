@@ -34,7 +34,9 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     let parametersView: UICollectionView = {
         let layout  = CenterAlignedCollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 92, height: 64)
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = DesignBook.Color.Background.list.uiColor()
         return collectionView
     }()
     
@@ -95,7 +97,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         stackView.addArrangedSubview(parametersView)
         parametersView.dataSource = self
         parametersView.register(WeatherPropertyCollectionViewCell.self,
-                                forCellWithReuseIdentifier: WeatherPropertyCollectionViewCell.resuableId)
+                                forCellWithReuseIdentifier: WeatherPropertyCellViewModel.resuableId)
     }
     
     private func setupShareView() {
@@ -129,7 +131,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherPropertyCollectionViewCell.resuableId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherPropertyCellViewModel.resuableId, for: indexPath)
         if let propertyCell = cell as? WeatherPropertyCollectionViewCell {
             propertyCell.configure(with: parameters[indexPath.row])
         }

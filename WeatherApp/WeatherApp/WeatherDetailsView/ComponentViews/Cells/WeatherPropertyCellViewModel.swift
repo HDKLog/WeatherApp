@@ -8,6 +8,7 @@
 import UIKit
 
 struct WeatherPropertyCellViewModel {
-        let icon: UIImage?
-        let description: String?
+    static let resuableId = "WeatherPropertyCell"
+    let icon: UIImage?
+    let description: String?
 }

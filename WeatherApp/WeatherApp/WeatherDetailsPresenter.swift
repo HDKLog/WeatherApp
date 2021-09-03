@@ -17,7 +17,8 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
     var view: WeatherDetailsView!
     var router: WeatherAppRoutering!
     
-    let weatherDetailUsecases = WeatherDetailsUseCase()
+    let weatherDetailUseCase = WeatherDetailsUseCase()
+    let weatherAppIconsUseCase = WeatherAppIconsUseCase()
     
     init(view: WeatherDetailsView, router: WeatherAppRoutering) {
         self.view = view
@@ -27,7 +28,7 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
     func viewDidLoad() {
         
         let coordinates = GeographicWeather.Coordinates(latitude: 41.695014, longitude: 44.830604)
-        weatherDetailUsecases.getGeographicWeather(for: coordinates) { [weak self]result in
+        weatherDetailUseCase.getGeographicWeather(for: coordinates) { [weak self]result in
             switch result {
             case .success(let weatherEntity):
                 self?.handle(entity:weatherEntity)
@@ -40,18 +41,18 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
     
     func  handle(entity: GeographicWeather) {
         
-        let parameters = [WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-4-cloud-rain"),
+        let parameters = [WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudRain.uiImage(),
                                                        description: "\(entity.main.humidity)%"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-63-raindrop"),
+                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.raindrop.uiImage(),
                                                        description: "-"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-100-pressure-reading"),
+                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.pressureReading.uiImage(),
                                                        description: "\(entity.main.pressure) hPa"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-13-cloud-wind"),
+                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudWind.uiImage(),
                                                        description: "\(entity.wind.speed) km/h"),
-                          WeatherPropertyCellViewModel(icon: UIImage(named: "icon-weather-90-compass"),
+                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.compass.uiImage(),
                                                        description: "\(entity.wind.degrees)")]
         
-        weatherDetailUsecases.getIcon(named: entity.weather.first?.icon ?? "" ) {[weak self] result in
+        weatherAppIconsUseCase.getIcon(named: entity.weather.first?.icon ?? "" ) {[weak self] result in
             
             var image: UIImage?
             switch result {

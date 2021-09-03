@@ -13,7 +13,7 @@ class WeatherForecastUseCase {
     
     let weatherDetailsGateway = WeatherDetailsGateway()
     
-    func getGeographicWeather(for coordinates: GeographicWeatherForecast.City.Coordinates, completionHandler: @escaping GeographicWeatherForecastResult) {
+    func getGeographicWeather(for coordinates: GeographicLocation, completionHandler: @escaping GeographicWeatherForecastResult) {
         
         weatherDetailsGateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
             switch result {

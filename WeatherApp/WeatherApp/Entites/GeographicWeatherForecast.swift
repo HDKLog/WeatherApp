@@ -87,19 +87,10 @@ struct GeographicWeatherForecast: Codable {
     }
     
     struct City: Codable {
-        struct Coordinates: Codable {
-            let latitude: Double
-            let longitude: Double
-            
-            enum CodingKeys: String, CodingKey {
-                case latitude = "lon"
-                case longitude = "lat"
-            }
-        }
         
         let id: Int64
         let name: String
-        let coord: Coordinates
+        let coord: GeographicLocation
         let country: String
         let population: Int
         let timezone: Int64

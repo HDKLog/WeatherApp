@@ -6,19 +6,22 @@
 //
 
 import UIKit
+import CoreLocation
 
 protocol WeatherDetailsPresentation {
     func viewDidLoad()
     func shareWether()
 }
 
-class WeatherDetailsPresenter: WeatherDetailsPresentation {
+class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     var view: WeatherDetailsView!
     var router: WeatherAppRoutering!
     
     let weatherDetailUseCase = WeatherDetailsUseCase()
     let weatherAppIconsUseCase = WeatherAppIconsUseCase()
+    let locationUsecase = WeatherAppLocationUseCase()
+    
     var weatherDescription: WeatherDescriptionViewModel?
     
     init(view: WeatherDetailsView, router: WeatherAppRoutering) {
@@ -27,9 +30,17 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
     }
     
     func viewDidLoad() {
-        
-        let coordinates = GeographicWeather.Coordinates(latitude: 41.695014, longitude: 44.830604)
-        weatherDetailUseCase.getGeographicWeather(for: coordinates) { [weak self]result in
+        loadWeather()
+    }
+    
+    
+    
+    func shareWether() {
+        view.showSharePopUp(description: weatherDescription)
+    }
+    
+    private func loadGeograpicWeather(coordinates: GeographicLocation) {
+        weatherDetailUseCase.getGeographicWeather(for: coordinates) { [weak self] result in
             switch result {
             case .success(let weatherEntity):
                 self?.handle(entity:weatherEntity)
@@ -40,7 +51,7 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
         }
     }
     
-    func  handle(entity: GeographicWeather) {
+    private func  handle(entity: GeographicWeather) {
         
         let parameters = [WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudRain.uiImage(),
                                                        description: "\(entity.main.humidity)%"),
@@ -77,7 +88,20 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
         view.configure(with: model)
     }
     
-    func shareWether() {
-        view.showSharePopUp(description: weatherDescription)
+    private func loadWeather() {
+        
+        locationUsecase.getCurrentLocation {[weak self] result in
+            switch result {
+            case .success(let location):
+                self?.loadGeograpicWeather(coordinates: location)
+            case .failure(let error):
+                self?.loadGeograpicWeather(coordinates:GeographicLocation.defaultCoordinates)
+                self?.view.displayError(error: error)
+            }
+        }
     }
+}
+
+extension WeatherDetailsPresenter : CLLocationManagerDelegate {
+    
 }

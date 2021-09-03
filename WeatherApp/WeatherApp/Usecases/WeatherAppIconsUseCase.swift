@@ -7,13 +7,13 @@
 
 import Foundation
 
-typealias GeographicWeatherImageResult = (Result<Data, Error>) -> Void
+typealias GeographicWeatherIconResult = (Result<Data, Error>) -> Void
 
 class WeatherAppIconsUseCase {
     let weatherAppIconsGateway = WeatherAppIconsGateway()
     
     
-    func getIcon(named: String, complition: @escaping GeographicWeatherImageResult) {
+    func getIcon(named: String, complition: @escaping GeographicWeatherIconResult) {
         
         weatherAppIconsGateway.getIcon(named: named) { result in
             switch result {

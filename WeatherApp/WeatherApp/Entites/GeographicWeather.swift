@@ -8,16 +8,7 @@
 import Foundation
 
 struct GeographicWeather: Codable {
-    struct Coordinates: Codable {
-        let latitude: Double
-        let longitude: Double
-        
-        enum CodingKeys: String, CodingKey {
-            case latitude = "lon"
-            case longitude = "lat"
-        }
-    }
-
+    
     struct Weather: Codable {
         let id: Int64
         let main: String
@@ -66,7 +57,7 @@ struct GeographicWeather: Codable {
         
     }
     
-    let coordinates: Coordinates
+    let coordinates: GeographicLocation
     let weather: [Weather]
     let base: String
     let main: Parameters

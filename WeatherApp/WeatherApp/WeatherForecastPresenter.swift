@@ -18,6 +18,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     
     let weatherForecastUseCase = WeatherForecastUseCase()
     let weatherIconUseCases = WeatherAppIconsUseCase()
+    let locationUsecase = WeatherAppLocationUseCase()
     
     init(view: WeatherForecastView, router: WeatherAppRoutering) {
         self.view = view
@@ -26,15 +27,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     
     func viewDidLoad() {
         
-        let coordinates = GeographicWeatherForecast.City.Coordinates(latitude: 41.695, longitude: 44.8306)
-        weatherForecastUseCase.getGeographicWeather(for: coordinates) { [weak self] result in
-            switch result {
-            case .success(let entity):
-                self?.handleResult(entity: entity)
-            case .failure(let error):
-                self?.view.displayError(error: error)
-            }
-        }
+        loadForecast()
     }
     
     func handleResult(entity: GeographicWeatherForecast) {
@@ -86,5 +79,29 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
                                              sections: sections)
         view.configure(with: model)
         view.reloadList()
+    }
+    
+    private func loadGeograpicWeather(coordinates: GeographicLocation) {
+        weatherForecastUseCase.getGeographicWeather(for: coordinates) { [weak self] result in
+            switch result {
+            case .success(let entity):
+                self?.handleResult(entity: entity)
+            case .failure(let error):
+                self?.view.displayError(error: error)
+            }
+        }
+    }
+    
+    private func loadForecast() {
+        
+        locationUsecase.getCurrentLocation {[weak self] result in
+            switch result {
+            case .success(let location):
+                self?.loadGeograpicWeather(coordinates: location)
+            case .failure(let error):
+                self?.loadGeograpicWeather(coordinates: GeographicLocation.defaultCoordinates)
+                self?.view.displayError(error: error)
+            }
+        }
     }
 }

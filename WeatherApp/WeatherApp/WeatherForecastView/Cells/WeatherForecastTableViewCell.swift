@@ -14,7 +14,7 @@ class WeatherForecastTableViewCell: UITableViewCell {
     let descriptionLabel = UILabel()
     let temperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 23)
         label.textColor = DesignBook.Color.Foreground.highlited.uiColor()
         
         return label

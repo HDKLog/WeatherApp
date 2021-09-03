@@ -19,6 +19,7 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
     
     let weatherDetailUseCase = WeatherDetailsUseCase()
     let weatherAppIconsUseCase = WeatherAppIconsUseCase()
+    var weatherDescription: WeatherDescriptionViewModel?
     
     init(view: WeatherDetailsView, router: WeatherAppRoutering) {
         self.view = view
@@ -67,16 +68,16 @@ class WeatherDetailsPresenter: WeatherDetailsPresentation {
         
         let firstDescription = entity.weather.first?.description ?? "-"
         let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()
-        let weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
+        weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                              locationDescription: "\(entity.name), \(entity.system.country)",
                                                              weatherDescription: "\(Int(entity.main.temperature))° | \(description)")
         let model = WeatherDetailsViewModel(title: "Today",
                                             weatherDescription: weatherDescription,
                                             wetherParameters: parameters)
         view.configure(with: model)
-            
     }
     
     func shareWether() {
+        view.showSharePopUp(description: weatherDescription)
     }
 }

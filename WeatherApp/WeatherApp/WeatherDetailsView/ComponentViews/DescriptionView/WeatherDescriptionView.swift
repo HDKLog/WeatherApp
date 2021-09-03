@@ -85,13 +85,13 @@ class WeatherDescriptionView: UIView {
         landscapeLayoutConstraints.append(contentsOf: landscapeConstraints)
     }
     
-    func configure(with model:WeatherDescriptionViewModel) {
-        
-        model.weatherImage.requestClouser { [weak self] data in
+    func configure(with model:WeatherDescriptionViewModel?) {
+        guard let viewModel = model else { return }
+        viewModel.weatherImage.requestClouser { [weak self] data in
             self?.weatherImage.image = UIImage(data: data)
         }
-        locationDescriptionLabel.text = model.locationDescription
-        weatherDescriptionLabel.text = model.weatherDescription
+        locationDescriptionLabel.text = viewModel.locationDescription
+        weatherDescriptionLabel.text = viewModel.weatherDescription
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

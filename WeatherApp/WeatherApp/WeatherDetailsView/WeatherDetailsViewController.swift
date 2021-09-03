@@ -9,6 +9,7 @@ import UIKit
 
 protocol WeatherDetailsView {
     func configure(with model: WeatherDetailsViewModel)
+    func showSharePopUp(description: WeatherDescriptionViewModel?)
     func displayError(error: Error)
 }
 
@@ -50,6 +51,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         let icon = UIImage(named: "icon-weather-today")
         self.tabBarItem = UITabBarItem(title: "Today", image: icon, selectedImage: icon)
     }
+    
     
     // MARK: - View lifecycle
     override func viewDidLoad() {
@@ -118,6 +120,29 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     func configureWeatherParameters(parameters: [WeatherPropertyCellViewModel]) {
         self.parameters = parameters
         parametersView.reloadData()
+    }
+    
+    func showSharePopUp(description: WeatherDescriptionViewModel?) {
+        
+        guard let descriptionModel = description else { return }
+        
+        // Setting description
+        let firstActivityItem = "\(descriptionModel.weatherDescription ?? ""), \(descriptionModel.locationDescription ?? "")"
+        
+        let activityViewController : UIActivityViewController = UIActivityViewController(
+            activityItems: [firstActivityItem], applicationActivities: nil)
+        
+        
+        // Anything you want to exclude
+        activityViewController.excludedActivityTypes = [
+            UIActivity.ActivityType.print,
+            UIActivity.ActivityType.assignToContact,
+            UIActivity.ActivityType.postToFacebook
+        ]
+        
+        self.present(activityViewController, animated: true, completion: nil)
+
+            
     }
     
     func displayError(error: Error) {

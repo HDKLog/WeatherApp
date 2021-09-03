@@ -10,6 +10,6 @@ import UIKit
 
 struct WeatherDetailsViewModel {
     let title: String?
-    let weatherDescription: WeatherDescriptionViewModel
+    let weatherDescription: WeatherDescriptionViewModel?
     let wetherParameters: [WeatherPropertyCellViewModel]
 }

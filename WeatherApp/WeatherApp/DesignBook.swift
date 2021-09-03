@@ -36,6 +36,7 @@ struct DesignBook {
         struct Background {
             static let main = ColorWrapper(name: "color-background-main")
             static let list = ColorWrapper(name: "color-background-list")
+            static let inverse = ColorWrapper(name: "color-background-inverse")
         }
         
         struct Foreground {
@@ -44,6 +45,13 @@ struct DesignBook {
             static let element = ColorWrapper(name: "color-foreground-element")
             static let inverse = ColorWrapper(name: "color-foreground-inverse")
             static let light = ColorWrapper(name: "color-foreground-light")
+            
+            static let purple = ColorWrapper(name: "color-foreground-purple")
+            static let orange = ColorWrapper(name: "color-foreground-orange")
+            static let green = ColorWrapper(name: "color-foreground-green")
+            static let blue = ColorWrapper(name: "color-foreground-blue")
+            static let yellow = ColorWrapper(name: "color-foreground-yellow")
+            static let red = ColorWrapper(name: "color-foreground-red")
         }
     }
 }

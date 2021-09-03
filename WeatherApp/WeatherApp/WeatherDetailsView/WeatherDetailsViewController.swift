@@ -24,12 +24,62 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         return label
     }()
     
+    let topSeparatorViews: UIStackView = {
+        let purpleDashedView = DashedLineView()
+        purpleDashedView.dashColor = DesignBook.Color.Foreground.purple.uiColor()
+        purpleDashedView.backgroundColor = .clear
+        purpleDashedView.perDashLength = 4
+        purpleDashedView.spaceBetweenDash = 4
+        purpleDashedView.contentMode = .redraw
+        
+        let orangeDashedView = DashedLineView()
+        orangeDashedView.dashColor = DesignBook.Color.Foreground.orange.uiColor()
+        orangeDashedView.backgroundColor = .clear
+        orangeDashedView.perDashLength = 4
+        orangeDashedView.spaceBetweenDash = 4
+        orangeDashedView.contentMode = .redraw
+        
+        let greenDashedView = DashedLineView()
+        greenDashedView.dashColor = DesignBook.Color.Foreground.green.uiColor()
+        greenDashedView.backgroundColor = .clear
+        greenDashedView.perDashLength = 4
+        greenDashedView.spaceBetweenDash = 4
+        greenDashedView.contentMode = .redraw
+        
+        let blueDashedView = DashedLineView()
+        blueDashedView.dashColor = DesignBook.Color.Foreground.blue.uiColor()
+        blueDashedView.backgroundColor = .clear
+        blueDashedView.perDashLength = 4
+        blueDashedView.spaceBetweenDash = 4
+        blueDashedView.contentMode = .redraw
+        
+        let yellowDashedView = DashedLineView()
+        yellowDashedView.dashColor = DesignBook.Color.Foreground.yellow.uiColor()
+        yellowDashedView.backgroundColor = .clear
+        yellowDashedView.perDashLength = 4
+        yellowDashedView.spaceBetweenDash = 4
+        yellowDashedView.contentMode = .redraw
+        
+        let redDashedView = DashedLineView()
+        redDashedView.dashColor = DesignBook.Color.Foreground.red.uiColor()
+        redDashedView.backgroundColor = .clear
+        redDashedView.perDashLength = 4
+        redDashedView.spaceBetweenDash = 4
+        redDashedView.contentMode = .redraw
+        
+        let stack = UIStackView(arrangedSubviews: [purpleDashedView, orangeDashedView, greenDashedView, yellowDashedView, redDashedView])
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    
     let descriptionView = WeatherDescriptionView()
     
     let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .fill
         return stackView
     }()
     
@@ -68,7 +118,9 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     }
     
     private func setupSubviews() {
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         setupTitleLabel()
+        setupTopSeparator()
         setupDescriptionView()
         setupStackView()
         setupParametersView()
@@ -77,6 +129,18 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     
     private func setupTitleLabel() {
         self.navigationItem.titleView = titleLabel
+    }
+    
+    private func setupTopSeparator() {
+        
+        view.addSubview(topSeparatorViews)
+        topSeparatorViews.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            topSeparatorViews.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topSeparatorViews.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topSeparatorViews.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topSeparatorViews.heightAnchor.constraint(equalToConstant: 2)
+        ])
     }
     
     private func setupDescriptionView() {

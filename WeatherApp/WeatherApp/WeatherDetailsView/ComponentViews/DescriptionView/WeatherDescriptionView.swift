@@ -24,6 +24,16 @@ class WeatherDescriptionView: UIView {
         return label
     }()
     
+    let bottomSeparator: DashedLineView = {
+        let separator = DashedLineView()
+        separator.dashColor = DesignBook.Color.Foreground.light.uiColor()
+        separator.backgroundColor = .clear
+        separator.perDashLength = 4
+        separator.spaceBetweenDash = 4
+        separator.contentMode = .redraw
+        return separator
+    }()
+    
     var portraitLayoutConstraints: [NSLayoutConstraint] = []
     var landscapeLayoutConstraints: [NSLayoutConstraint] = []
 
@@ -37,7 +47,8 @@ class WeatherDescriptionView: UIView {
         setupWeatherImageView()
         setupLocationDescriptionLabel()
         setupWeatherDescriptionLabel()
-        NSLayoutConstraint.activate(portraitLayoutConstraints)
+        setupSeparator()
+        modifyConstraints()
     }
     
     private func setupWeatherImageView() {
@@ -96,6 +107,17 @@ class WeatherDescriptionView: UIView {
         landscapeLayoutConstraints.append(contentsOf: landscapeConstraints)
     }
     
+    private func setupSeparator() {
+        bottomSeparator.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(bottomSeparator)
+        NSLayoutConstraint.activate([
+            bottomSeparator.heightAnchor.constraint(equalToConstant: 2),
+            bottomSeparator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 64),
+            bottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -64),
+            bottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+    
     func configure(with model:WeatherDescriptionViewModel?) {
         guard let viewModel = model else { return }
         viewModel.weatherImage.requestClouser { [weak self] data in
@@ -107,13 +129,16 @@ class WeatherDescriptionView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
-        if traitCollection.horizontalSizeClass == .compact {
-            NSLayoutConstraint.deactivate(landscapeLayoutConstraints)
-            NSLayoutConstraint.activate(portraitLayoutConstraints)
-        } else if traitCollection.horizontalSizeClass == .regular {
+        modifyConstraints()
+    }
+    
+    private func modifyConstraints() {
+        if traitCollection.verticalSizeClass == .compact {
             NSLayoutConstraint.deactivate(portraitLayoutConstraints)
             NSLayoutConstraint.activate(landscapeLayoutConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(landscapeLayoutConstraints)
+            NSLayoutConstraint.activate(portraitLayoutConstraints)
         }
     }
 }

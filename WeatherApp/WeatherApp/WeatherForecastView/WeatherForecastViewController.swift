@@ -124,7 +124,9 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
     }
     
     func displayError(error: Error) {
-        print("\(error.localizedDescription)")
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func reloadList() {

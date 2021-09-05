@@ -12,19 +12,11 @@ typealias WeatherAppIconResult = (Result<Data, Error>) -> Void
 
 class WeatherAppIconsGateway {
     
+    let client = OpenWeatherApiClient()
+    
     func getIcon(named: String, complition: @escaping WeatherAppIconResult) {
         let query = OpenWeatherApiFileQuery(type: .x2, extention: .png).withFileName(name: named)
 
-        let session = URLSession.shared.dataTask(with: query.getUrl()!) { data, response, error in
-
-            DispatchQueue.main.async() {
-                guard let jsonData = data, error == nil else {
-                    complition(.failure(error!))
-                    return
-                }
-                complition(.success(jsonData))
-            }
-        }
-        session.resume()
+        client.getData(query: query, complition: complition)
     }
 }

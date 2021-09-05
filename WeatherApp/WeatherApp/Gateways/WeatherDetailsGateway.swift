@@ -11,43 +11,17 @@ typealias GeographicWeatherDataResult = (Result<Data, Error>) -> Void
 
 class WeatherDetailsGateway {
     
-    lazy var requestQueue = DispatchQueue(label: "com.weatherapp.requestQueue")
+    let client = OpenWeatherApiClient()
     
     func getGeographicWeatherData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
         let query = OpenWeatherApiJsonQuery(type: .Weather).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
-        
-        requestQueue.async {
-            let session = URLSession.shared.dataTask(with: query.getUrl()!) { data, response, error in
-
-                DispatchQueue.main.async() {
-                    guard let data = data, error == nil else {
-                        complition(.failure(error!))
-                        return
-                    }
-                    complition(.success(data))
-                }
-            }
-            session.resume()
-        }
+        client.getData(query: query, complition: complition)
     }
     
     func getGeographicWeatherForecastData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
         let query = OpenWeatherApiJsonQuery(type: .Forecast).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
-        
-        requestQueue.async {
-            let session = URLSession.shared.dataTask(with: query.getUrl()!) { data, response, error in
-
-                DispatchQueue.main.async() {
-                    guard let data = data, error == nil else {
-                        complition(.failure(error!))
-                        return
-                    }
-                    complition(.success(data))
-                }
-            }
-            session.resume()
-        }
+        client.getData(query: query, complition: complition)
     }
 }

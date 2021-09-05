@@ -8,15 +8,17 @@
 import UIKit
 
 protocol WeatherAppRoutering {
-    
+    func rootTo(tab index: Int)
 }
 
 class WeatherAppRouter: UITabBarController, WeatherAppRoutering {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    func rootTo(tab index: Int) {
+        self.selectedIndex = index
     }
 
 }

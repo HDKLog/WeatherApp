@@ -62,7 +62,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
                           WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudWind.uiImage(),
                                                        description: "\(entity.wind.speed) km/h"),
                           WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.compass.uiImage(),
-                                                       description: "\(entity.wind.degrees)")]
+                                                       direction: entity.wind.degrees)]
         
         let imageName = entity.weather.first!.icon
         let dataRequest = WeatherDescriptionViewModel.DataRequest { [weak self] handler in

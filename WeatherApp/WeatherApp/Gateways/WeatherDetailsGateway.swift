@@ -15,10 +15,10 @@ class WeatherDetailsGateway {
     
     func getGeographicWeatherData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
-        let url = URL(string:"https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&units=metric&appid=e9826ddefc1718ac6962acbfc2e4838e")
+        let query = OpenWeatherApiJsonQuery(type: .Weather).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
         
         requestQueue.async {
-            let session = URLSession.shared.dataTask(with: url!) { data, response, error in
+            let session = URLSession.shared.dataTask(with: query.getUrl()!) { data, response, error in
 
                 DispatchQueue.main.async() {
                     guard let data = data, error == nil else {
@@ -34,10 +34,10 @@ class WeatherDetailsGateway {
     
     func getGeographicWeatherForecastData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
-        let url = URL(string: "https://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&units=metric&appid=e9826ddefc1718ac6962acbfc2e4838e")
+        let query = OpenWeatherApiJsonQuery(type: .Forecast).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
         
         requestQueue.async {
-            let session = URLSession.shared.dataTask(with: url!) { data, response, error in
+            let session = URLSession.shared.dataTask(with: query.getUrl()!) { data, response, error in
 
                 DispatchQueue.main.async() {
                     guard let data = data, error == nil else {

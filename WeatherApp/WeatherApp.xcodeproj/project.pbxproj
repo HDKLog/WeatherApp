@@ -11,6 +11,9 @@
 		3901F94B26E233C30029E1D9 /* WeatherAppLocationGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3901F94A26E233C30029E1D9 /* WeatherAppLocationGateway.swift */; };
 		3901F94D26E239A10029E1D9 /* GeographicLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3901F94C26E239A10029E1D9 /* GeographicLocation.swift */; };
 		391D6D2F26E28BBF00D92D8E /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391D6D2E26E28BBF00D92D8E /* DashedLineView.swift */; };
+		391D6D5B26E4D7F300D92D8E /* OpenWeatherAPIQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391D6D5A26E4D7F300D92D8E /* OpenWeatherAPIQuery.swift */; };
+		391D6D5D26E4E53D00D92D8E /* OpenWeatherApiJsonQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391D6D5C26E4E53D00D92D8E /* OpenWeatherApiJsonQuery.swift */; };
+		391D6D5F26E4E5A200D92D8E /* OpenWeatherApiFileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391D6D5E26E4E5A200D92D8E /* OpenWeatherApiFileQuery.swift */; };
 		3972660B26DD2ECC001A9144 /* WeatherForecastPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3972660A26DD2ECC001A9144 /* WeatherForecastPresenter.swift */; };
 		3972660D26DD31AD001A9144 /* WeatherForecastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3972660C26DD31AD001A9144 /* WeatherForecastViewModel.swift */; };
 		3972661126DD43E8001A9144 /* WeatherForecastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3972661026DD43E8001A9144 /* WeatherForecastTableViewCell.swift */; };
@@ -63,6 +66,9 @@
 		3901F94A26E233C30029E1D9 /* WeatherAppLocationGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAppLocationGateway.swift; sourceTree = "<group>"; };
 		3901F94C26E239A10029E1D9 /* GeographicLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeographicLocation.swift; sourceTree = "<group>"; };
 		391D6D2E26E28BBF00D92D8E /* DashedLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
+		391D6D5A26E4D7F300D92D8E /* OpenWeatherAPIQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherAPIQuery.swift; sourceTree = "<group>"; };
+		391D6D5C26E4E53D00D92D8E /* OpenWeatherApiJsonQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherApiJsonQuery.swift; sourceTree = "<group>"; };
+		391D6D5E26E4E5A200D92D8E /* OpenWeatherApiFileQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherApiFileQuery.swift; sourceTree = "<group>"; };
 		3972660A26DD2ECC001A9144 /* WeatherForecastPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastPresenter.swift; sourceTree = "<group>"; };
 		3972660C26DD31AD001A9144 /* WeatherForecastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastViewModel.swift; sourceTree = "<group>"; };
 		3972661026DD43E8001A9144 /* WeatherForecastTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastTableViewCell.swift; sourceTree = "<group>"; };
@@ -131,6 +137,16 @@
 				391D6D2E26E28BBF00D92D8E /* DashedLineView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		391D6D5926E4D7C900D92D8E /* OpenWeatherAPI */ = {
+			isa = PBXGroup;
+			children = (
+				391D6D5A26E4D7F300D92D8E /* OpenWeatherAPIQuery.swift */,
+				391D6D5C26E4E53D00D92D8E /* OpenWeatherApiJsonQuery.swift */,
+				391D6D5E26E4E5A200D92D8E /* OpenWeatherApiFileQuery.swift */,
+			);
+			path = OpenWeatherAPI;
 			sourceTree = "<group>";
 		};
 		3972660E26DD4347001A9144 /* WeatherForecastView */ = {
@@ -227,6 +243,7 @@
 				39FCE8E726D6D8710046E545 /* AppDelegate.swift */,
 				39FCE8E926D6D8710046E545 /* SceneDelegate.swift */,
 				3972672426E0DB9D001A9144 /* WeatherAppRouter.swift */,
+				391D6D5926E4D7C900D92D8E /* OpenWeatherAPI */,
 				3972661C26DD83EA001A9144 /* Gateways */,
 				3972661D26DD83FF001A9144 /* Usecases */,
 				3972661B26DD83D1001A9144 /* Entites */,
@@ -469,7 +486,10 @@
 				39FCE8E826D6D8710046E545 /* AppDelegate.swift in Sources */,
 				3972661126DD43E8001A9144 /* WeatherForecastTableViewCell.swift in Sources */,
 				3972668A26DECF1A001A9144 /* WeatherForecastTableViewCellModel.swift in Sources */,
+				391D6D5F26E4E5A200D92D8E /* OpenWeatherApiFileQuery.swift in Sources */,
+				391D6D5B26E4D7F300D92D8E /* OpenWeatherAPIQuery.swift in Sources */,
 				39FCE9C726D8FB430046E545 /* WeatherDetailsViewModel.swift in Sources */,
+				391D6D5D26E4E53D00D92D8E /* OpenWeatherApiJsonQuery.swift in Sources */,
 				397266F926DFD2D4001A9144 /* WeatherForecastTableViewHeaderView.swift in Sources */,
 				3972668626DE89E7001A9144 /* GeographicWeatherForecast.swift in Sources */,
 				3972660B26DD2ECC001A9144 /* WeatherForecastPresenter.swift in Sources */,

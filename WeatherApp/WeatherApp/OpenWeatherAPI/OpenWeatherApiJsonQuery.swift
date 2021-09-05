@@ -38,7 +38,7 @@ class OpenWeatherApiJsonQuery: OpenWeatherApiQuery {
     }
     
     func withUnits(unit: Unit) -> OpenWeatherApiJsonQuery {
-        parameters["unit"] = unit.rawValue
+        parameters["units"] = unit.rawValue
         return self
     }
     

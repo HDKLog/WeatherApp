@@ -116,4 +116,47 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let cell = sut.parametersView.dataSource?.collectionView(sut.parametersView, cellForItemAt: IndexPath(row: 0, section: 0)) as? WeatherPropertyCollectionViewCell
         XCTAssertEqual(cell?.descriptionLabel.text, "100Unit")
     }
+    
+    func test_viewController_renderWeatherIconForPropertyCellViewModel() {
+        
+        let sut = WeatherDetailsViewController()
+        
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
+            handler(Data())
+        }
+        let image = DesignBook.Image.Icon.cloudRain.uiImage()
+        let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: image, description: "100Unit")]
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.loadViewIfNeeded()
+        sut.configure(with: model)
+        
+        let cell = sut.parametersView.dataSource?.collectionView(sut.parametersView, cellForItemAt: IndexPath(row: 0, section: 0)) as? WeatherPropertyCollectionViewCell
+        XCTAssertNotEqual(cell?.iconView.image, nil)
+    }
+    
+    func test_viewController_notRenderWeatherIconForPropertyCellViewModel() {
+        
+        let sut = WeatherDetailsViewController()
+        
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
+            handler(Data())
+        }
+        let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.loadViewIfNeeded()
+        sut.configure(with: model)
+        
+        let cell = sut.parametersView.dataSource?.collectionView(sut.parametersView, cellForItemAt: IndexPath(row: 0, section: 0)) as? WeatherPropertyCollectionViewCell
+        XCTAssertEqual(cell?.iconView.image, nil)
+    }
 }

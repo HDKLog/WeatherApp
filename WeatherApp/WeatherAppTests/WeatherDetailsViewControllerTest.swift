@@ -95,4 +95,25 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertTrue(sut.descriptionView.weatherImage.image == nil)
     }
+    
+    func test_viewController_renderWeatherDescriptionForPropertyCellViewModel() {
+        
+        let sut = WeatherDetailsViewController()
+        
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
+            handler(Data())
+        }
+        let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.loadViewIfNeeded()
+        sut.configure(with: model)
+        
+        let cell = sut.parametersView.dataSource?.collectionView(sut.parametersView, cellForItemAt: IndexPath(row: 0, section: 0)) as? WeatherPropertyCollectionViewCell
+        XCTAssertEqual(cell?.descriptionLabel.text, "100Unit")
+    }
 }

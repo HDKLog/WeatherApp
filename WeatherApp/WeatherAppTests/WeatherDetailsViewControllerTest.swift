@@ -75,4 +75,24 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertTrue(sut.descriptionView.weatherImage.image != nil)
     }
+    
+    func test_viewController_notRenderInvalidWeatherImageForViewModel() {
+        
+        let sut = WeatherDetailsViewController()
+        
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
+            handler(Data())
+        }
+        let propertiesModel: [WeatherPropertyCellViewModel] = []
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.configure(with: model)
+        sut.loadViewIfNeeded()
+        
+        XCTAssertTrue(sut.descriptionView.weatherImage.image == nil)
+    }
 }

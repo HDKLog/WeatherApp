@@ -39,4 +39,19 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertEqual(sut.descriptionView.locationDescriptionLabel.text, "a Loction Description")
     }
+    
+    func test_viewController_renderWeatherDescriptionForViewModel() {
+        let sut = WeatherDetailsViewController()
+        
+        let propertiesModel: [WeatherPropertyCellViewModel] = []
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in }),
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.configure(with: model)
+        
+        XCTAssertEqual(sut.descriptionView.weatherDescriptionLabel.text, "a Weather Description")
+    }
 }

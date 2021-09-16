@@ -195,4 +195,26 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertTrue(presenter.wetherShareTriggered)
     }
+    
+    func test_viewController_triggerViewDidLoadAfterLoadingView() {
+        
+        let presenter = DummyPresenter()
+        let sut = WeatherDetailsViewController()
+        sut.presenter = presenter
+        
+        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
+            handler(Data())
+        }
+        let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
+                                                           locationDescription: "a Loction Description",
+                                                           weatherDescription: "a Weather Description")
+        let model = WeatherDetailsViewModel(title: "a title",
+                                            weatherDescription: descriptionModel,
+                                            wetherParameters: propertiesModel)
+        sut.loadViewIfNeeded()
+        sut.configure(with: model)
+        
+        XCTAssertTrue(presenter.viewDidLoaded)
+    }
 }

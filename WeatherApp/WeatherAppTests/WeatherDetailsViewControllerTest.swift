@@ -10,11 +10,26 @@ import XCTest
 @testable import WeatherApp
 class WeatherDetailsViewControllerTest: XCTestCase {
     
+    class DummyPresenter: WeatherDetailsPresentation {
+        var wetherShareTriggered = false
+        var viewDidLoaded = false
+        func viewDidLoad() {
+            viewDidLoaded = true
+        }
+        
+        func shareWether() {
+            wetherShareTriggered = true
+        }
+        
+        
+    }
+    
     func test_viewController_renderTitleForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let dataRequest = WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in })
         let propertiesModel: [WeatherPropertyCellViewModel] = []
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in }),
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                            locationDescription: "",
                                                            weatherDescription: "")
         let model = WeatherDetailsViewModel(title: "a title",
@@ -28,8 +43,9 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     func test_viewController_renderLocationDescriptionForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let dataRequest = WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in })
         let propertiesModel: [WeatherPropertyCellViewModel] = []
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in }),
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                            locationDescription: "a Loction Description",
                                                            weatherDescription: "")
         let model = WeatherDetailsViewModel(title: "a title",
@@ -43,8 +59,9 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     func test_viewController_renderWeatherDescriptionForViewModel() {
         let sut = WeatherDetailsViewController()
         
+        let dataRequest = WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in })
         let propertiesModel: [WeatherPropertyCellViewModel] = []
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest(requestClouser: {_ in }),
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                            locationDescription: "a Loction Description",
                                                            weatherDescription: "a Weather Description")
         let model = WeatherDetailsViewModel(title: "a title",
@@ -158,19 +175,6 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         let cell = sut.parametersView.dataSource?.collectionView(sut.parametersView, cellForItemAt: IndexPath(row: 0, section: 0)) as? WeatherPropertyCollectionViewCell
         XCTAssertEqual(cell?.iconView.image, nil)
-    }
-    class DummyPresenter: WeatherDetailsPresentation {
-        var wetherShareTriggered = false
-        var viewDidLoaded = false
-        func viewDidLoad() {
-            viewDidLoaded = true
-        }
-        
-        func shareWether() {
-            wetherShareTriggered = true
-        }
-        
-        
     }
     
     func test_viewController_triggerActionForShareButton() {

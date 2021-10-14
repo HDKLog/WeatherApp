@@ -40,6 +40,17 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         XCTAssertEqual(sut.titleLabel.text, "a title")
     }
     
+    func test_viewController_triggerViewDidLoadAfterLoadingView() {
+        
+        let presenter = DummyPresenter()
+        let sut = WeatherDetailsViewController()
+        sut.presenter = presenter
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertTrue(presenter.viewDidLoaded)
+    }
+    
     func test_viewController_renderLocationDescriptionForViewModel() {
         let sut = WeatherDetailsViewController()
         
@@ -198,27 +209,5 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         sut.shareView.button.sendActions(for: .touchUpInside)
         
         XCTAssertTrue(presenter.wetherShareTriggered)
-    }
-    
-    func test_viewController_triggerViewDidLoadAfterLoadingView() {
-        
-        let presenter = DummyPresenter()
-        let sut = WeatherDetailsViewController()
-        sut.presenter = presenter
-        
-        let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
-            handler(Data())
-        }
-        let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
-                                                           locationDescription: "a Loction Description",
-                                                           weatherDescription: "a Weather Description")
-        let model = WeatherDetailsViewModel(title: "a title",
-                                            weatherDescription: descriptionModel,
-                                            wetherParameters: propertiesModel)
-        sut.loadViewIfNeeded()
-        sut.configure(with: model)
-        
-        XCTAssertTrue(presenter.viewDidLoaded)
     }
 }

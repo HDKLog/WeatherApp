@@ -158,6 +158,7 @@
 				39D3FD6626DD0FBC00687EC7 /* WeatherForecastViewController.swift */,
 				3972660C26DD31AD001A9144 /* WeatherForecastViewModel.swift */,
 				3972660F26DD4361001A9144 /* Cells */,
+				397266FB26DFD2DB001A9144 /* Headers */,
 			);
 			path = WeatherForecastView;
 			sourceTree = "<group>";
@@ -252,7 +253,6 @@
 				39D3FD6226DD09FC00687EC7 /* WeatherDetailsPresenter.swift */,
 				3972660A26DD2ECC001A9144 /* WeatherForecastPresenter.swift */,
 				391D6D3226E2A8FD00D92D8E /* Views */,
-				397266FB26DFD2DB001A9144 /* Headers */,
 				39FCE8ED26D6D8740046E545 /* Assets.xcassets */,
 				3972662026DE06CD001A9144 /* temp */,
 				39FCE8F226D6D8740046E545 /* LaunchScreen.storyboard */,

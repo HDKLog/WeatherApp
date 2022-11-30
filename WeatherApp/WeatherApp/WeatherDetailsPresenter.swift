@@ -53,16 +53,28 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     private func  handle(entity: GeographicWeather) {
         
-        let parameters = [WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudRain.uiImage(),
-                                                       description: "\(entity.main.humidity)%"),
-                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.raindrop.uiImage(),
-                                                       description: "-"),
-                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.pressureReading.uiImage(),
-                                                       description: "\(entity.main.pressure) hPa"),
-                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.cloudWind.uiImage(),
-                                                       description: "\(entity.wind.speed) km/h"),
-                          WeatherPropertyCellViewModel(icon: DesignBook.Image.Icon.compass.uiImage(),
-                                                       direction: entity.wind.degrees)]
+        let parameters = [
+            WeatherPropertyCellViewModel(
+                icon: DesignBook.Image.Icon.Weather.Cloud.rain.uiImage(),
+                description: "\(entity.main.humidity)%"
+            ),
+            WeatherPropertyCellViewModel(
+                icon: DesignBook.Image.Icon.Weather.raindrop.uiImage(),
+                description: "-"
+            ),
+            WeatherPropertyCellViewModel(
+                icon: DesignBook.Image.Icon.Weather.Pressure.reading.uiImage(),
+                description: "\(entity.main.pressure) hPa"
+            ),
+            WeatherPropertyCellViewModel(
+                icon: DesignBook.Image.Icon.Weather.Pressure.reading.uiImage(),
+                description: "\(entity.wind.speed) km/h"
+            ),
+            WeatherPropertyCellViewModel(
+                icon: DesignBook.Image.Icon.Weather.compass.uiImage(),
+                direction: entity.wind.degrees
+            )
+        ]
         
         let imageName = entity.weather.first!.icon
         let dataRequest = WeatherDescriptionViewModel.DataRequest { [weak self] handler in

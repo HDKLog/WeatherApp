@@ -10,8 +10,8 @@ import Foundation
 class OpenWeatherApiJsonQuery: OpenWeatherApiQuery {
     
     enum QueryType: String {
-        case Weather = "weather"
-        case Forecast = "forecast"
+        case weather = "weather"
+        case forecast = "forecast"
     }
     
     enum Unit: String {

@@ -15,13 +15,13 @@ class WeatherDetailsGateway {
     
     func getGeographicWeatherData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
-        let query = OpenWeatherApiJsonQuery(type: .Weather).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
+        let query = OpenWeatherApiJsonQuery(type: .weather).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
         client.getData(query: query, complition: complition)
     }
     
     func getGeographicWeatherForecastData(latitude: Double, longitude: Double, complition: @escaping GeographicWeatherDataResult) {
         
-        let query = OpenWeatherApiJsonQuery(type: .Forecast).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
+        let query = OpenWeatherApiJsonQuery(type: .forecast).withLocation(latitude: latitude, longitude: longitude).withUnits(unit: .metric)
         client.getData(query: query, complition: complition)
     }
 }

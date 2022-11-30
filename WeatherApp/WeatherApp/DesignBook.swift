@@ -17,11 +17,20 @@ struct DesignBook {
         }
         
         struct Icon {
-            static let cloudRain = ImageWrapper(name: "icon-weather-4-cloud-rain")
-            static let raindrop = ImageWrapper(name: "icon-weather-63-raindrop")
-            static let pressureReading = ImageWrapper(name: "icon-weather-100-pressure-reading")
-            static let cloudWind = ImageWrapper(name: "icon-weather-13-cloud-wind")
-            static let compass = ImageWrapper(name: "icon-weather-90-compass")
+            struct Weather {
+                struct Cloud {
+                    static let rain = ImageWrapper(name: "icon-weather-cloud-rain")
+                    static let wind = ImageWrapper(name: "icon-weather-cloud-wind")
+                }
+                
+                struct Pressure {
+                    static let reading = ImageWrapper(name: "icon-weather-pressure-reading")
+                }
+                
+                static let raindrop = ImageWrapper(name: "icon-weather-raindrop")
+                static let compass = ImageWrapper(name: "icon-weather-compass")
+                
+            }
         }
     }
     

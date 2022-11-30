@@ -29,7 +29,8 @@ struct DesignBook {
                 
                 static let raindrop = ImageWrapper(name: "icon-weather-raindrop")
                 static let compass = ImageWrapper(name: "icon-weather-compass")
-                
+                static let today = ImageWrapper(name: "icon-weather-today")
+                static let forecast = ImageWrapper(name: "icon-weather-forecast")
             }
         }
     }

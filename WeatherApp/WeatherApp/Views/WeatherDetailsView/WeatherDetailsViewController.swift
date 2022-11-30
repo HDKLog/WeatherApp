@@ -99,7 +99,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     convenience init() {
         self.init(nibName: nil, bundle: nil)
         
-        let icon = UIImage(named: "icon-weather-today")
+        let icon = DesignBook.Image.Icon.Weather.today.uiImage()
         self.tabBarItem = UITabBarItem(title: "Today", image: icon, selectedImage: icon)
     }
     
@@ -114,7 +114,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     
     // MARK: - Setup Subviews
     private func setupView() {
-        view.backgroundColor = UIColor(named: "color-background-main")
+        view.backgroundColor = DesignBook.Color.Background.main.uiColor()
     }
     
     private func setupSubviews() {

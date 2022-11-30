@@ -107,7 +107,7 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
     }
     
     private func setupTabBarItem() {
-        let icon = UIImage(named: "icon-weather-forecast")
+        let icon = DesignBook.Image.Icon.Weather.forecast.uiImage()
         self.tabBarItem = UITabBarItem(title: "Forecast", image: icon, selectedImage: icon)
     }
     

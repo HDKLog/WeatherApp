@@ -88,7 +88,7 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let sut = WeatherDetailsViewController()
         
         let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
-            let image = DesignBook.Image.Icon.cloudRain.uiImage()
+            let image = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage()
             handler(image.pngData()!)
         }
         let propertiesModel: [WeatherPropertyCellViewModel] = []
@@ -152,7 +152,7 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let dataRequest = WeatherDescriptionViewModel.DataRequest { handler in
             handler(Data())
         }
-        let image = DesignBook.Image.Icon.cloudRain.uiImage()
+        let image = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage()
         let propertiesModel: [WeatherPropertyCellViewModel] = [WeatherPropertyCellViewModel(icon: image, description: "100Unit")]
         let descriptionModel = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                            locationDescription: "a Loction Description",

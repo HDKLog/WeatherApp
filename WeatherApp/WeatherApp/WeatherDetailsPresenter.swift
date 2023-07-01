@@ -72,7 +72,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             ),
             WeatherPropertyCellViewModel(
                 icon: DesignBook.Image.Icon.Weather.compass.uiImage(),
-                direction: entity.wind.degrees
+                description: WeatherPropertyCellViewModel.DirectionDescription(direction: entity.wind.degrees)
             )
         ]
         

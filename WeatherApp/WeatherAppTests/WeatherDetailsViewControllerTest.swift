@@ -10,7 +10,7 @@ import XCTest
 @testable import WeatherApp
 class WeatherDetailsViewControllerTest: XCTestCase {
     
-    class DummyPresenter: WeatherDetailsPresentation {
+    class Presenter: WeatherDetailsPresentation {
         var wetherShareTriggered = false
         var viewDidLoaded = false
         func viewDidLoad() {
@@ -22,7 +22,7 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         }
     }
 
-    func makeSut(descriptionViewModel: WeatherDescriptionViewModel,
+    func makeSut(descriptionViewModel: WeatherDescriptionViewModel? = nil,
                  title: String? = nil,
                  propertiesViewModel: [WeatherPropertyCellViewModel] = [],
                  presenter: WeatherDetailsPresentation? = nil) -> WeatherDetailsViewController {
@@ -52,9 +52,8 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     
     func test_viewController_triggerViewDidLoadAfterLoadingView() {
         
-        let presenter = DummyPresenter()
-        let sut = WeatherDetailsViewController()
-        sut.presenter = presenter
+        let presenter = Presenter()
+        let sut = makeSut(presenter: presenter)
         
         sut.loadViewIfNeeded()
         
@@ -62,9 +61,8 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     }
     
     func test_viewController_renderLocationDescriptionForViewModel() {
-        
-        let imageData = Data()
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(Data()) },
                                                            locationDescription: "a Loction Description",
                                                            weatherDescription: nil)
 
@@ -75,8 +73,7 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     
     func test_viewController_renderWeatherDescriptionForViewModel() {
 
-        let imageData = Data()
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(Data()) },
                                                            locationDescription: nil,
                                                            weatherDescription: "a Weather Description")
 
@@ -112,15 +109,10 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     }
     
     func test_viewController_renderWeatherDescriptionForPropertyCellViewModel() {
-        
-        let imageData = Data()
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
-                                                           locationDescription: nil,
-                                                           weatherDescription: nil)
 
-        let sut = makeSut(descriptionViewModel: descriptionModel,
-                          propertiesViewModel: propertiesModel)
+        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+
+        let sut = makeSut(propertiesViewModel: propertiesModel)
         sut.loadViewIfNeeded()
         
         let indexPath = IndexPath(row: 0, section: 0)
@@ -149,16 +141,11 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     }
     
     func test_viewController_renderWeatherIconForPropertyCellViewModel() {
-        
-        let imageData = Data()
+
         let image = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage()
         let propertiesModel = [WeatherPropertyCellViewModel(icon: image, description: "100Unit")]
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
-                                                           locationDescription: nil,
-                                                           weatherDescription: nil)
 
-        let sut = makeSut(descriptionViewModel: descriptionModel,
-                          propertiesViewModel: propertiesModel)
+        let sut = makeSut(propertiesViewModel: propertiesModel)
         sut.loadViewIfNeeded()
 
         let indexPath = IndexPath(row: 0, section: 0)
@@ -168,15 +155,10 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     }
     
     func test_viewController_notRenderWeatherEmptyIconForPropertyCellViewModel() {
-        
-        let imageData = Data()
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
-                                                           locationDescription: nil,
-                                                           weatherDescription: nil)
 
-        let sut = makeSut(descriptionViewModel: descriptionModel,
-                          propertiesViewModel: propertiesModel)
+        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+
+        let sut = makeSut(propertiesViewModel: propertiesModel)
         sut.loadViewIfNeeded()
         
         let indexPath = IndexPath(row: 0, section: 0)
@@ -187,15 +169,9 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     
     
     func test_viewController_triggerActionForShareButton() {
-        
-        let imageData = Data()
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
-                                                           locationDescription: nil,
-                                                           weatherDescription: nil)
 
-        let presenter = DummyPresenter()
-        let sut = makeSut(descriptionViewModel: descriptionModel,
-                          presenter: presenter)
+        let presenter = Presenter()
+        let sut = makeSut(presenter: presenter)
 
         sut.loadViewIfNeeded()
         sut.shareView.button.sendActions(for: .touchUpInside)

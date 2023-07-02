@@ -15,8 +15,8 @@ protocol WeatherDetailsPresentation {
 
 class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
-    var view: WeatherDetailsView!
-    var router: WeatherAppRoutering!
+    var view: WeatherDetailsView?
+    var router: WeatherAppRoutering?
     
     let weatherDetailUseCase = WeatherDetailsUseCase()
     let weatherAppIconsUseCase = WeatherAppIconsUseCase()
@@ -24,7 +24,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     var weatherDescription: WeatherDescriptionViewModel?
     
-    init(view: WeatherDetailsView, router: WeatherAppRoutering) {
+    init(view: WeatherDetailsView?, router: WeatherAppRoutering?) {
         self.view = view
         self.router = router
     }
@@ -36,7 +36,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     
     func shareWether() {
-        view.showSharePopUp(description: weatherDescription)
+        view?.showSharePopUp(description: weatherDescription)
     }
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
@@ -46,7 +46,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
                 self?.handle(entity:weatherEntity)
                 
             case .failure(let error):
-                self?.view.displayError(error: error)
+                self?.view?.displayError(error: error)
             }
         }
     }
@@ -84,7 +84,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
                 case .success(let data):
                     handler(data)
                 case .failure(let error):
-                    self?.view.displayError(error: error)
+                    self?.view?.displayError(error: error)
                 }
             }
         }
@@ -97,7 +97,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
         let model = WeatherDetailsViewModel(title: "Today",
                                             weatherDescription: weatherDescription,
                                             wetherParameters: parameters)
-        view.configure(with: model)
+        view?.configure(with: model)
     }
     
     private func loadWeather() {
@@ -108,7 +108,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
                 self?.loadGeograpicWeather(coordinates: location)
             case .failure(let error):
                 self?.loadGeograpicWeather(coordinates:GeographicLocation.defaultCoordinates)
-                self?.view.displayError(error: error)
+                self?.view?.displayError(error: error)
             }
         }
     }

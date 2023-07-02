@@ -50,8 +50,8 @@ class WeatherForecastViewControllerTest: XCTestCase {
         let dataRequest = WeatherForecastTableViewCellModel.DataRequest { $0(Data()) }
         let tableViewCellModel = WeatherForecastTableViewCellModel(image: dataRequest, time: nil, description: nil, temperature: nil)
         let rows = [tableViewCellModel, tableViewCellModel]
-        let emptySection = WeatherForecastViewModel.Section(title: nil, rows: rows)
-        let sut = makeSut(sections: [emptySection])
+        let section = WeatherForecastViewModel.Section(title: nil, rows: rows)
+        let sut = makeSut(sections: [section])
 
         sut.loadViewIfNeeded()
 

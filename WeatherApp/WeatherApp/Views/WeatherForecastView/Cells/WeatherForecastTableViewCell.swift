@@ -72,7 +72,7 @@ class WeatherForecastTableViewCell: UITableViewCell {
     }
     
     func configure(with model: WeatherForecastTableViewCellModel) {
-        model.image.requestData { [weak self] data in
+        model.image?.requestData { [weak self] data in
             self?.weatherImageView.image = UIImage(data: data)
         }
         timeLabel.text = model.time

@@ -23,7 +23,7 @@ struct WeatherForecastTableViewCellModel {
         }
     }
     
-    let image: DataRequest
+    let image: DataRequest?
     let time: String?
     let description: String?
     let temperature: String?

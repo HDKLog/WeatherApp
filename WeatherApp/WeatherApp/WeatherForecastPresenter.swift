@@ -28,24 +28,26 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
         
         loadForecast()
     }
+
+    private func dataRequestForIcon(named name: String) -> WeatherForecastTableViewCellModel.DataRequest {
+
+        WeatherForecastTableViewCellModel.DataRequest { [weak self] handler in
+            self?.weatherAppUseCase.getIcon(named: name) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    handler(data)
+                case .failure(let error):
+                    self?.view.displayError(error: error)
+                }
+            }
+        }
+    }
     
     func handleResult(entity: GeographicWeatherForecast) {
         
         let rows: [WeatherForecastViewModel.Section] = entity.list.map {
             
-            let imageName = $0.weather.first!.icon
-            let dataRequest = WeatherForecastTableViewCellModel.DataRequest { [weak self] handler in
-                
-                self?.weatherAppUseCase.getIcon(named: imageName) { [weak self]result in
-                    switch result {
-                    case .success(let data):
-                        handler(data)
-                    case .failure(let error):
-                        self?.view.displayError(error: error)
-                    }
-                }
-            }
-            
+            let dataRequest = $0.weather.first.flatMap { weather in dataRequestForIcon(named: weather.icon) }
             
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")

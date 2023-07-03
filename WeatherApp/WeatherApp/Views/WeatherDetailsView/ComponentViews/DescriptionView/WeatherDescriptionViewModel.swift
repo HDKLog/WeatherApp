@@ -21,7 +21,7 @@ struct WeatherDescriptionViewModel {
         }
     }
     
-    let weatherImage: DataRequest
+    let weatherImage: DataRequest?
     let locationDescription: String?
     let weatherDescription: String?
 }

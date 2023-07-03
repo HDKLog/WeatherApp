@@ -120,7 +120,7 @@ class WeatherDescriptionView: UIView {
     
     func configure(with model:WeatherDescriptionViewModel?) {
         guard let viewModel = model else { return }
-        viewModel.weatherImage.requestClouser { [weak self] data in
+        viewModel.weatherImage?.requestClouser { [weak self] data in
             self?.weatherImage.image = UIImage(data: data)
         }
         locationDescriptionLabel.text = viewModel.locationDescription

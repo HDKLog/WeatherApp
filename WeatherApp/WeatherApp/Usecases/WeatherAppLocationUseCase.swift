@@ -8,18 +8,79 @@
 import Foundation
 
 typealias GeographicLocationResult = (Result<GeographicLocation, Error>) -> Void
+typealias GeographicWeatherIconResult = (Result<Data, Error>) -> Void
+typealias GeographicWeatherForecastResult = (Result<GeographicWeatherForecast, Error>) -> Void
+typealias GeographicWeatherResult = (Result<GeographicWeather, Error>) -> Void
 
-class WeatherAppLocationUseCase {
-    
+protocol WeatherAppUseableCase {
+    func getGeographicWeatherForecast(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherForecastResult)
+    func getGeographicWeather(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherResult)
+    func getCurrentLocation(completion: @escaping GeographicLocationResult)
+    func getIcon(named: String, completion: @escaping GeographicWeatherIconResult)
+}
+
+class WeatherAppUseCase: WeatherAppUseableCase {
+
+    static let parsingError = NSError(domain: "com.weatherApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Fail to get consistent responce from server"])
+
+    let weatherDetailsGateway = WeatherDetailsGateway()
     let gateway = WeatherAppLocationGateway()
+    let weatherAppIconsGateway = WeatherAppIconsGateway()
+
+    func getGeographicWeatherForecast(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherForecastResult) {
+
+        weatherDetailsGateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
+            switch result {
+            case .success(let jsonData):
+                guard let model = try? JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData) else {
+                    completion(.failure(WeatherAppUseCase.parsingError))
+                    return
+                }
+                completion(.success(model))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func getGeographicWeather(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherResult) {
+
+        weatherDetailsGateway.getGeographicWeatherData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
+            switch result {
+            case .success(let jsonData):
+
+                guard let model = try? JSONDecoder().decode(GeographicWeather.self, from: jsonData) else {
+                    completion(.failure(WeatherAppUseCase.parsingError))
+                    return
+                }
+
+                completion(.success(model))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
     
-    func getCurrentLocation(complition: @escaping GeographicLocationResult) {
+    
+    func getCurrentLocation(completion: @escaping GeographicLocationResult) {
         gateway.getCurrentLocation { result in
             switch result {
             case .success(let location):
-                complition(.success(GeographicLocation(latitude: location.latitude, longitude: location.longitude)))
+                completion(.success(GeographicLocation(latitude: location.latitude, longitude: location.longitude)))
             case .failure(let error):
-                complition(.failure(error))
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func getIcon(named: String, completion: @escaping GeographicWeatherIconResult) {
+
+        weatherAppIconsGateway.getIcon(named: named) { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }

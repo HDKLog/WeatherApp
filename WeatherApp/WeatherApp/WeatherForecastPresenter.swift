@@ -16,13 +16,12 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     var view: WeatherForecastView!
     var router: WeatherAppRoutering!
     
-    let weatherForecastUseCase = WeatherForecastUseCase()
-    let weatherIconUseCases = WeatherAppIconsUseCase()
-    let locationUsecase = WeatherAppLocationUseCase()
+    let weatherAppUseCase: WeatherAppUseableCase!
     
-    init(view: WeatherForecastView, router: WeatherAppRoutering) {
+    init(view: WeatherForecastView, router: WeatherAppRoutering, weatherAppUseCase: WeatherAppUseableCase) {
         self.view = view
         self.router = router
+        self.weatherAppUseCase = weatherAppUseCase
     }
     
     func viewDidLoad() {
@@ -37,7 +36,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
             let imageName = $0.weather.first!.icon
             let dataRequest = WeatherForecastTableViewCellModel.DataRequest { [weak self] handler in
                 
-                self?.weatherIconUseCases.getIcon(named: imageName) { [weak self]result in
+                self?.weatherAppUseCase.getIcon(named: imageName) { [weak self]result in
                     switch result {
                     case .success(let data):
                         handler(data)
@@ -82,7 +81,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     }
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
-        weatherForecastUseCase.getGeographicWeather(for: coordinates) { [weak self] result in
+        weatherAppUseCase.getGeographicWeatherForecast(for: coordinates) { [weak self] result in
             switch result {
             case .success(let entity):
                 self?.handleResult(entity: entity)
@@ -94,7 +93,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     
     private func loadForecast() {
         
-        locationUsecase.getCurrentLocation {[weak self] result in
+        weatherAppUseCase.getCurrentLocation {[weak self] result in
             switch result {
             case .success(let location):
                 self?.loadGeograpicWeather(coordinates: location)

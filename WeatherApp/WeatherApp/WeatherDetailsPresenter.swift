@@ -18,15 +18,14 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     var view: WeatherDetailsView?
     var router: WeatherAppRoutering?
     
-    let weatherDetailUseCase = WeatherDetailsUseCase()
-    let weatherAppIconsUseCase = WeatherAppIconsUseCase()
-    let locationUsecase = WeatherAppLocationUseCase()
+    let weatherAppUseCase: WeatherAppUseableCase?
     
     var weatherDescription: WeatherDescriptionViewModel?
     
-    init(view: WeatherDetailsView?, router: WeatherAppRoutering?) {
+    init(view: WeatherDetailsView?, router: WeatherAppRoutering?, weatherAppUseCase: WeatherAppUseableCase?) {
         self.view = view
         self.router = router
+        self.weatherAppUseCase = weatherAppUseCase
     }
     
     func viewDidLoad() {
@@ -40,7 +39,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     }
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
-        weatherDetailUseCase.getGeographicWeather(for: coordinates) { [weak self] result in
+        weatherAppUseCase?.getGeographicWeather(for: coordinates) { [weak self] result in
             switch result {
             case .success(let weatherEntity):
                 self?.handle(entity:weatherEntity)
@@ -76,15 +75,16 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             )
         ]
         
-        let imageName = entity.weather.first!.icon
-        let dataRequest = WeatherDescriptionViewModel.DataRequest { [weak self] handler in
-            
-            self?.weatherAppIconsUseCase.getIcon(named: imageName) { [weak self] result in
-                switch result {
-                case .success(let data):
-                    handler(data)
-                case .failure(let error):
-                    self?.view?.displayError(error: error)
+        let dataRequest = entity.weather.first.flatMap { [weak self] weather in
+            WeatherDescriptionViewModel.DataRequest { [weak self] handler in
+
+                self?.weatherAppUseCase?.getIcon(named: weather.icon) { [weak self] result in
+                    switch result {
+                    case .success(let data):
+                        handler(data)
+                    case .failure(let error):
+                        self?.view?.displayError(error: error)
+                    }
                 }
             }
         }
@@ -102,7 +102,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     private func loadWeather() {
         
-        locationUsecase.getCurrentLocation {[weak self] result in
+        weatherAppUseCase?.getCurrentLocation {[weak self] result in
             switch result {
             case .success(let location):
                 self?.loadGeograpicWeather(coordinates: location)

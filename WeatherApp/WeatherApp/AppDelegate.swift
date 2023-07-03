@@ -17,13 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow()
         
         let router = WeatherAppRouter()
+
+        let weatherAppUseCase = WeatherAppUseCase()
         
         let rootViewControler = WeatherDetailsViewController()
-        let presenter = WeatherDetailsPresenter(view: rootViewControler, router: router)
+        let presenter = WeatherDetailsPresenter(view: rootViewControler, router: router, weatherAppUseCase: weatherAppUseCase)
         rootViewControler.presenter = presenter
         
         let forecastViewController = WeatherForecastViewController()
-        let forecastPresenter = WeatherForecastPresenter(view: forecastViewController, router: router)
+        let forecastPresenter = WeatherForecastPresenter(view: forecastViewController, router: router, weatherAppUseCase: WeatherAppUseCase())
         forecastViewController.presenter = forecastPresenter
         
         router.viewControllers = [

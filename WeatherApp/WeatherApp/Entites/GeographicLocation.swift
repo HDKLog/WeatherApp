@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GeographicLocation: Codable {
+struct GeographicLocation: Codable, Equatable {
     static let defaultCoordinates = GeographicLocation(latitude: 41.695014, longitude: 44.830604)
     
     let latitude: Double

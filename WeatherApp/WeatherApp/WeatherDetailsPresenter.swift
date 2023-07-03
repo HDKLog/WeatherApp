@@ -49,6 +49,20 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             }
         }
     }
+
+    private func dataRequestForIcon(named name: String) -> WeatherDescriptionViewModel.DataRequest {
+
+        WeatherDescriptionViewModel.DataRequest { [weak self] handler in
+            self?.weatherAppUseCase?.getIcon(named: name) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    handler(data)
+                case .failure(let error):
+                    self?.view?.displayError(error: error)
+                }
+            }
+        }
+    }
     
     private func  handle(entity: GeographicWeather) {
         
@@ -75,19 +89,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             )
         ]
         
-        let dataRequest = entity.weather.first.flatMap { [weak self] weather in
-            WeatherDescriptionViewModel.DataRequest { [weak self] handler in
-
-                self?.weatherAppUseCase?.getIcon(named: weather.icon) { [weak self] result in
-                    switch result {
-                    case .success(let data):
-                        handler(data)
-                    case .failure(let error):
-                        self?.view?.displayError(error: error)
-                    }
-                }
-            }
-        }
+        let dataRequest = entity.weather.first.flatMap { self.dataRequestForIcon(named: $0.icon) }
         
         let firstDescription = entity.weather.first?.description ?? "-"
         let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()

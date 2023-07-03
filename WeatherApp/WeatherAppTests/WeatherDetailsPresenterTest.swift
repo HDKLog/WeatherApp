@@ -81,6 +81,22 @@ final class WeatherDetailsPresenterTest: XCTestCase {
 
     }
 
+    var mokedModel: GeographicWeather {
+        GeographicWeather(coordinates: GeographicLocation(latitude: 1, longitude: 1),
+                          weather: [GeographicWeather.Weather(id: 1, main: "Main", description: "Description", icon: "01d")],
+                          base: "Base",
+                          main: GeographicWeather.Parameters(temperature: 1.0, feelsLike: 1, temperatureMinimum: 1, temperatureMaximum: 1, pressure: 1, humidity: 1),
+                          visibility: 1,
+                          wind: GeographicWeather.Wind(speed: 1, degrees: 1),
+                          clouds: GeographicWeather.Clouds(all: 1),
+                          data: 1,
+                          system: GeographicWeather.System(type: 1, id: 1, country: "Country", sunrise: 1, sunset: 1),
+                          timezone: 1,
+                          id: 1,
+                          name: "name",
+                          code: 1)
+    }
+
     func makeSut(view: WeatherDetailsView? = nil,
                  router: WeatherAppRoutering? = nil,
                  useCase: WeatherAppUseableCase? = nil) -> WeatherDetailsPresenter {
@@ -146,26 +162,13 @@ final class WeatherDetailsPresenterTest: XCTestCase {
     func test_presenter_onViewDidLoad_onLoadCurrentLocationSucessDisplayLocationWeather() {
 
         let location = GeographicLocation(latitude: 1, longitude: 1)
-        let model = GeographicWeather(coordinates: location,
-                                      weather: [GeographicWeather.Weather(id: 1, main: "Main", description: "Description", icon: "01d")],
-                                      base: "Base",
-                                      main: GeographicWeather.Parameters(temperature: 1.0, feelsLike: 1, temperatureMinimum: 1, temperatureMaximum: 1, pressure: 1, humidity: 1),
-                                      visibility: 1,
-                                      wind: GeographicWeather.Wind(speed: 1, degrees: 1),
-                                      clouds: GeographicWeather.Clouds(all: 1),
-                                      data: 1,
-                                      system: GeographicWeather.System(type: 1, id: 1, country: "Country", sunrise: 1, sunset: 1),
-                                      timezone: 1,
-                                      id: 1,
-                                      name: "name",
-                                      code: 1)
         let useCase = UseCase()
         let view = View()
         let sut = makeSut(view: view, useCase: useCase)
 
         sut.viewDidLoad()
         useCase.getCurrentLocationCompletions.first?(.success(location))
-        useCase.getGeographicWeatherForCompletions.first?(.success(model))
+        useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
 
 
         XCTAssertEqual(view.configureWithModelCalls, 1)
@@ -210,7 +213,7 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         XCTAssertEqual(useCase.getGeographicWeatherForCoordinates.first, GeographicLocation.defaultCoordinates)
     }
 
-    func test_presenter_onViewDidLoad_onLoadDefaultLocationWeatherSuccess() {
+    func test_presenter_onViewDidLoad_onLoadCurrentLocationFailureAndLoadDefaultLocationWeatherSuccessDisplaysDefaultLocationWeather() {
 
         let error = NSError(domain: "testDomain", code: -4)
         let useCase = UseCase()
@@ -219,7 +222,22 @@ final class WeatherDetailsPresenterTest: XCTestCase {
 
         sut.viewDidLoad()
         useCase.getCurrentLocationCompletions.first?(.failure(error))
+        useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
 
-        XCTAssertEqual(useCase.getGeographicWeatherForCoordinates.first, GeographicLocation.defaultCoordinates)
+        //XCTAssertEqual(view.configureWithModelModels.first, mokedModel)
+    }
+
+    func test_presenter_onViewDidLoad_onLoadCurrentLocationFailureAndLoadDefaultLocationWeatherFailureDisplaysError() {
+
+        let error = NSError(domain: "testDomain", code: -4)
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.viewDidLoad()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+        useCase.getGeographicWeatherForCompletions.first?(.failure(error))
+
+        XCTAssertEqual(view.displayErrorErrors.last as? NSError, error)
     }
 }

@@ -25,49 +25,24 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     }()
     
     let topSeparatorViews: UIStackView = {
-        let purpleDashedView = DashedLineView()
-        purpleDashedView.dashColor = DesignBook.Color.Foreground.purple.uiColor()
-        purpleDashedView.backgroundColor = .clear
-        purpleDashedView.perDashLength = 4
-        purpleDashedView.spaceBetweenDash = 4
-        purpleDashedView.contentMode = .redraw
+        var arrangedSubviewsColors = [DesignBook.Color.Foreground.purple,
+                                      DesignBook.Color.Foreground.orange,
+                                      DesignBook.Color.Foreground.green,
+                                      DesignBook.Color.Foreground.blue,
+                                      DesignBook.Color.Foreground.yellow,
+                                      DesignBook.Color.Foreground.red ]
+
+        var arrangedSubviews = arrangedSubviewsColors.map {
+            let dashedView = DashedLineView()
+            dashedView.dashColor = $0.uiColor()
+            dashedView.backgroundColor = .clear
+            dashedView.perDashLength = 4
+            dashedView.spaceBetweenDash = 4
+            dashedView.contentMode = .redraw
+            return dashedView
+        }
         
-        let orangeDashedView = DashedLineView()
-        orangeDashedView.dashColor = DesignBook.Color.Foreground.orange.uiColor()
-        orangeDashedView.backgroundColor = .clear
-        orangeDashedView.perDashLength = 4
-        orangeDashedView.spaceBetweenDash = 4
-        orangeDashedView.contentMode = .redraw
-        
-        let greenDashedView = DashedLineView()
-        greenDashedView.dashColor = DesignBook.Color.Foreground.green.uiColor()
-        greenDashedView.backgroundColor = .clear
-        greenDashedView.perDashLength = 4
-        greenDashedView.spaceBetweenDash = 4
-        greenDashedView.contentMode = .redraw
-        
-        let blueDashedView = DashedLineView()
-        blueDashedView.dashColor = DesignBook.Color.Foreground.blue.uiColor()
-        blueDashedView.backgroundColor = .clear
-        blueDashedView.perDashLength = 4
-        blueDashedView.spaceBetweenDash = 4
-        blueDashedView.contentMode = .redraw
-        
-        let yellowDashedView = DashedLineView()
-        yellowDashedView.dashColor = DesignBook.Color.Foreground.yellow.uiColor()
-        yellowDashedView.backgroundColor = .clear
-        yellowDashedView.perDashLength = 4
-        yellowDashedView.spaceBetweenDash = 4
-        yellowDashedView.contentMode = .redraw
-        
-        let redDashedView = DashedLineView()
-        redDashedView.dashColor = DesignBook.Color.Foreground.red.uiColor()
-        redDashedView.backgroundColor = .clear
-        redDashedView.perDashLength = 4
-        redDashedView.spaceBetweenDash = 4
-        redDashedView.contentMode = .redraw
-        
-        let stack = UIStackView(arrangedSubviews: [purpleDashedView, orangeDashedView, greenDashedView, yellowDashedView, redDashedView])
+        let stack = UIStackView(arrangedSubviews: arrangedSubviews)
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         return stack

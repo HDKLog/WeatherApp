@@ -23,13 +23,15 @@ class WeatherAppUseCase: WeatherAppUseableCase {
 
     static let parsingError = NSError(domain: "com.weatherApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Fail to get consistent responce from server"])
 
-    let weatherDetailsGateway = WeatherDetailsGateway()
-    let gateway = WeatherAppLocationGateway()
-    let weatherAppIconsGateway = WeatherAppIconsGateway()
+    let gateway: WeatherAppGateway!
+
+    init(gateway: WeatherAppGateway) {
+        self.gateway = gateway
+    }
 
     func getGeographicWeatherForecast(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherForecastResult) {
 
-        weatherDetailsGateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
+        gateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
             switch result {
             case .success(let jsonData):
                 guard let model = try? JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData) else {
@@ -45,7 +47,7 @@ class WeatherAppUseCase: WeatherAppUseableCase {
 
     func getGeographicWeather(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherResult) {
 
-        weatherDetailsGateway.getGeographicWeatherData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
+        gateway.getGeographicWeatherData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
             switch result {
             case .success(let jsonData):
 
@@ -75,7 +77,7 @@ class WeatherAppUseCase: WeatherAppUseableCase {
 
     func getIcon(named: String, completion: @escaping GeographicWeatherIconResult) {
 
-        weatherAppIconsGateway.getIcon(named: named) { result in
+        gateway.getIcon(named: named) { result in
             switch result {
             case .success(let data):
                 completion(.success(data))

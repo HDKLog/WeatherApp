@@ -51,7 +51,7 @@ class WeatherPropertyCollectionViewCell: UICollectionViewCell {
     
     
     func configure(with model: WeatherPropertyCellViewModel) {
-        iconView.image = model.icon?.withRenderingMode(.alwaysTemplate)
-        descriptionLabel.text = model.description
+        iconView.image = model.property.icon?.withRenderingMode(.alwaysTemplate)
+        descriptionLabel.text = model.property.description
     }
 }

@@ -34,11 +34,12 @@ class WeatherAppUseCase: WeatherAppUseableCase {
         gateway.getGeographicWeatherForecastData(latitude: coordinates.latitude, longitude: coordinates.longitude) { result in
             switch result {
             case .success(let jsonData):
-                guard let model = try? JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData) else {
-                    completion(.failure(WeatherAppUseCase.parsingError))
-                    return
+                do {
+                    let model = try JSONDecoder().decode(GeographicWeatherForecast.self, from: jsonData)
+                    completion(.success(model))
+                } catch {
+                    completion(.failure(error))
                 }
-                completion(.success(model))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -51,12 +52,12 @@ class WeatherAppUseCase: WeatherAppUseableCase {
             switch result {
             case .success(let jsonData):
 
-                guard let model = try? JSONDecoder().decode(GeographicWeather.self, from: jsonData) else {
-                    completion(.failure(WeatherAppUseCase.parsingError))
-                    return
+                do {
+                    let model = try JSONDecoder().decode(GeographicWeather.self, from: jsonData)
+                    completion(.success(model))
+                } catch {
+                    completion(.failure(error))
                 }
-
-                completion(.success(model))
             case .failure(let error):
                 completion(.failure(error))
             }

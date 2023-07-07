@@ -21,7 +21,8 @@ class OpenWeatherApiJsonQuery: OpenWeatherApiQuery {
     }
     
     static let token = "e9826ddefc1718ac6962acbfc2e4838e"
-    static let apiUrl = "https://api.openweathermap.org/data/2.5/"
+    static let version = "2.5"
+    static let apiUrl = "https://api.openweathermap.org/data/\(version)/"
     
     var parameters: [String: String] = [:]
     var type: QueryType

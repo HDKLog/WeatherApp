@@ -67,26 +67,11 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     private func  handle(entity: GeographicWeather) {
         
         let parameters = [
-            WeatherPropertyCellViewModel(
-                icon: DesignBook.Image.Icon.Weather.Cloud.rain.uiImage(),
-                description: "\(entity.main.humidity)%"
-            ),
-            WeatherPropertyCellViewModel(
-                icon: DesignBook.Image.Icon.Weather.raindrop.uiImage(),
-                description: "-"
-            ),
-            WeatherPropertyCellViewModel(
-                icon: DesignBook.Image.Icon.Weather.Pressure.reading.uiImage(),
-                description: "\(entity.main.pressure) hPa"
-            ),
-            WeatherPropertyCellViewModel(
-                icon: DesignBook.Image.Icon.Weather.Pressure.reading.uiImage(),
-                description: "\(entity.wind.speed) km/h"
-            ),
-            WeatherPropertyCellViewModel(
-                icon: DesignBook.Image.Icon.Weather.compass.uiImage(),
-                description: WeatherPropertyCellViewModel.DirectionDescription(direction: entity.wind.degrees)
-            )
+            WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.HumidityDescription(humidity: entity.main.humidity)),
+            WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.DewPointDescription(dewPoint: 0)),
+            WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.PressureDescription(pressure: entity.main.pressure)),
+            WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.SpeedDescription(speed: entity.wind.speed)),
+            WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.DirectionDescription(direction: entity.wind.degrees))
         ]
         
         let dataRequest = entity.weather.first.flatMap { self.dataRequestForIcon(named: $0.icon) }
@@ -114,8 +99,4 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             }
         }
     }
-}
-
-extension WeatherDetailsPresenter : CLLocationManagerDelegate {
-    
 }

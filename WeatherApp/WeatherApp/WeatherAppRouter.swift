@@ -13,7 +13,7 @@ enum WeatherAppRouteringTab: Int {
 }
 
 protocol WeatherAppRoutering {
-    func rootTo(tab index: WeatherAppRouteringTab)
+    func rootTo(tab: WeatherAppRouteringTab)
 }
 
 class WeatherAppRouter: UITabBarController, WeatherAppRoutering {
@@ -22,8 +22,8 @@ class WeatherAppRouter: UITabBarController, WeatherAppRoutering {
         super.viewDidLoad()
     }
     
-    func rootTo(tab index: WeatherAppRouteringTab) {
-        self.selectedIndex = index.rawValue
+    func rootTo(tab: WeatherAppRouteringTab) {
+        self.selectedIndex = tab.rawValue
     }
 
 }

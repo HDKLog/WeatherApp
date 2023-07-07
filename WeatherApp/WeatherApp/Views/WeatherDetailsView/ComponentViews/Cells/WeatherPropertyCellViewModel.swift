@@ -9,18 +9,17 @@ import UIKit
 
 struct WeatherPropertyCellViewModel {
     static let resuableId = "WeatherPropertyCell"
-    let icon: UIImage?
-    let description: String?
-    
-    init(icon: UIImage?, description: CustomStringConvertible?) {
-        self.icon = icon
-        self.description = description?.description
-    }
+    let property: WeatherProperty
+}
+
+protocol WeatherProperty: CustomStringConvertible {
+    var icon: UIImage? { get }
 }
 
 extension WeatherPropertyCellViewModel {
-    struct DirectionDescription: CustomStringConvertible {
+    struct DirectionDescription: WeatherProperty {
         let direction: Double
+        var icon: UIImage? { DesignBook.Image.Icon.Weather.compass.uiImage() }
         var description: String {
             if (011...349).contains(direction) {
                 return "N"
@@ -58,5 +57,29 @@ extension WeatherPropertyCellViewModel {
                 return "-"
             }
         }
+    }
+
+    struct DewPointDescription: WeatherProperty {
+        let dewPoint: Int
+        var icon: UIImage? { DesignBook.Image.Icon.Weather.raindrop.uiImage() }
+        var description: String { "\(dewPoint)°C" }
+    }
+
+    struct HumidityDescription: WeatherProperty {
+        let humidity: Int
+        var icon: UIImage? { DesignBook.Image.Icon.Weather.Cloud.rain.uiImage() }
+        var description: String { "\(humidity)%" }
+    }
+
+    struct PressureDescription: WeatherProperty {
+        let pressure: Double
+        var icon: UIImage? { DesignBook.Image.Icon.Weather.Pressure.reading.uiImage() }
+        var description: String { "\(pressure) hPa" }
+    }
+
+    struct SpeedDescription: WeatherProperty {
+        let speed: Double
+        var icon: UIImage? { DesignBook.Image.Icon.Weather.Cloud.rain.uiImage() }
+        var description: String { "\(speed) km/h" }
     }
 }

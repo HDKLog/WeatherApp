@@ -107,10 +107,42 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertNil(sut.descriptionView.weatherImage.image)
     }
-    
-    func test_viewController_renderWeatherDescriptionForPropertyCellViewModel() {
 
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
+    func test_viewController_renderWeatherDescriptionForPropertyDewPointCellViewModel() {
+
+        let value = Int.random(in: 0...100)
+        let dewPoint = WeatherPropertyCellViewModel.DewPointDescription(dewPoint: value)
+        let propertiesModel = [WeatherPropertyCellViewModel(property: dewPoint)]
+
+        let sut = makeSut(propertiesViewModel: propertiesModel)
+        sut.loadViewIfNeeded()
+
+        let indexPath = IndexPath(row: 0, section: 0)
+        let dataSource = sut.parametersView.dataSource
+        let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
+        XCTAssertEqual(cell?.descriptionLabel.text, "\(value)°C")
+    }
+
+    func test_viewController_renderWeatherDescriptionForPropertyHumidityCellViewModel() {
+
+        let value = Int.random(in: 0...100)
+        let dewPoint = WeatherPropertyCellViewModel.HumidityDescription(humidity: value)
+        let propertiesModel = [WeatherPropertyCellViewModel(property: dewPoint)]
+
+        let sut = makeSut(propertiesViewModel: propertiesModel)
+        sut.loadViewIfNeeded()
+
+        let indexPath = IndexPath(row: 0, section: 0)
+        let dataSource = sut.parametersView.dataSource
+        let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
+        XCTAssertEqual(cell?.descriptionLabel.text, "\(value)%")
+    }
+    
+    func test_viewController_renderWeatherDescriptionForPropertyPressureCellViewModel() {
+
+        let value = Double.random(in: 0...100)
+        let pressure = WeatherPropertyCellViewModel.PressureDescription(pressure: value)
+        let propertiesModel = [WeatherPropertyCellViewModel(property: pressure)]
 
         let sut = makeSut(propertiesViewModel: propertiesModel)
         sut.loadViewIfNeeded()
@@ -118,14 +150,30 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let indexPath = IndexPath(row: 0, section: 0)
         let dataSource = sut.parametersView.dataSource
         let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
-        XCTAssertEqual(cell?.descriptionLabel.text, "100Unit")
+        XCTAssertEqual(cell?.descriptionLabel.text, "\(value) hPa")
+    }
+
+    func test_viewController_renderWeatherDescriptionForPropertySpeedCellViewModel() {
+
+        let value = Double.random(in: 0...100)
+        let pressure = WeatherPropertyCellViewModel.SpeedDescription(speed: value)
+        let propertiesModel = [WeatherPropertyCellViewModel(property: pressure)]
+
+        let sut = makeSut(propertiesViewModel: propertiesModel)
+        sut.loadViewIfNeeded()
+
+        let indexPath = IndexPath(row: 0, section: 0)
+        let dataSource = sut.parametersView.dataSource
+        let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
+        XCTAssertEqual(cell?.descriptionLabel.text, "\(value) km/h")
     }
 
     func test_viewController_renderWeatherDescriptionDirectionForPropertyCellViewModel() {
 
         let imageData = Data()
-        let windDirection = WeatherPropertyCellViewModel.DirectionDescription(direction: Double.random(in: 011...349))
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: windDirection)]
+        let value = Double.random(in: 011...349)
+        let direction =  WeatherPropertyCellViewModel.DirectionDescription(direction: value)
+        let propertiesModel = [WeatherPropertyCellViewModel(property: direction)]
         let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
                                                            locationDescription: nil,
                                                            weatherDescription: nil)
@@ -139,34 +187,6 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
         XCTAssertEqual(cell?.descriptionLabel.text, "N")
     }
-    
-    func test_viewController_renderWeatherIconForPropertyCellViewModel() {
-
-        let image = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage()
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: image, description: "100Unit")]
-
-        let sut = makeSut(propertiesViewModel: propertiesModel)
-        sut.loadViewIfNeeded()
-
-        let indexPath = IndexPath(row: 0, section: 0)
-        let dataSource = sut.parametersView.dataSource
-        let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
-        XCTAssertEqual(cell?.iconView.image?.pngData(), image.pngData())
-    }
-    
-    func test_viewController_notRenderWeatherEmptyIconForPropertyCellViewModel() {
-
-        let propertiesModel = [WeatherPropertyCellViewModel(icon: nil, description: "100Unit")]
-
-        let sut = makeSut(propertiesViewModel: propertiesModel)
-        sut.loadViewIfNeeded()
-        
-        let indexPath = IndexPath(row: 0, section: 0)
-        let dataSource = sut.parametersView.dataSource
-        let cell = dataSource?.collectionView(sut.parametersView, cellForItemAt: indexPath) as? WeatherPropertyCollectionViewCell
-        XCTAssertNil(cell?.iconView.image)
-    }
-    
     
     func test_viewController_triggerActionForShareButton() {
 

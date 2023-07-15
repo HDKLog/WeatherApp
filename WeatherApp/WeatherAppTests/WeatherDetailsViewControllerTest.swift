@@ -11,13 +11,15 @@ import XCTest
 class WeatherDetailsViewControllerTest: XCTestCase {
     
     class Presenter: WeatherDetailsPresentation {
-        var wetherShareTriggered = false
+
         var viewDidLoaded = false
         func viewDidLoad() {
             viewDidLoaded = true
         }
-        
-        func shareWether() {
+        var wetherShareTriggered = false
+        var shareWetherCalls: Int = 0
+        var shareWetherModels: [WeatherDescriptionViewModel] = []
+        func shareWether(with model: WeatherDescriptionViewModel?) {
             wetherShareTriggered = true
         }
     }
@@ -73,13 +75,16 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     
     func test_viewController_renderWeatherDescriptionForViewModel() {
 
+        let weatherDescription = WeatherDescriptionViewModel.WeatherDescription(temperature: 1,
+                                                                                temperatureUnit: .celsius,
+                                                                                details: "a Weather Details")
         let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(Data()) },
                                                            locationDescription: nil,
-                                                           weatherDescription: "a Weather Description")
+                                                           weatherDescription: weatherDescription)
 
         let sut = makeSut(descriptionViewModel: descriptionModel)
         
-        XCTAssertEqual(sut.descriptionView.weatherDescriptionLabel.text, "a Weather Description")
+        XCTAssertEqual(sut.descriptionView.weatherDescriptionLabel.text, weatherDescription.description)
     }
     
     func test_viewController_renderWeatherImageForViewModel() {

@@ -124,7 +124,7 @@ class WeatherDescriptionView: UIView {
             self?.weatherImage.image = UIImage(data: data)
         }
         locationDescriptionLabel.text = viewModel.locationDescription
-        weatherDescriptionLabel.text = viewModel.weatherDescription
+        weatherDescriptionLabel.text = viewModel.weatherDescription?.description
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -20,8 +20,21 @@ struct WeatherDescriptionViewModel {
             requestClouser(handler)
         }
     }
+
+    struct WeatherDescription: CustomStringConvertible {
+        enum TemperatureUnit: String {
+            case celsius = "C"
+            case fahrenheit = "F"
+        }
+
+        let temperature: Int
+        let temperatureUnit: TemperatureUnit
+        let details: String?
+
+        var description: String { "\(temperature)°\(temperatureUnit.rawValue) \(details.flatMap { " | " + $0 } ?? "" )" }
+    }
     
     let weatherImage: DataRequest?
     let locationDescription: String?
-    let weatherDescription: String?
+    let weatherDescription: WeatherDescription?
 }

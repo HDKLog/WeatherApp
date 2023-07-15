@@ -10,7 +10,7 @@ import CoreLocation
 
 protocol WeatherDetailsPresentation {
     func viewDidLoad()
-    func shareWether()
+    func shareWether(with model: WeatherDescriptionViewModel?)
 }
 
 class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
@@ -19,8 +19,6 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     var router: WeatherAppRoutering?
     
     let weatherAppUseCase: WeatherAppUseableCase?
-    
-    var weatherDescription: WeatherDescriptionViewModel?
     
     init(view: WeatherDetailsView?, router: WeatherAppRoutering?, weatherAppUseCase: WeatherAppUseableCase?) {
         self.view = view
@@ -34,8 +32,8 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     
     
     
-    func shareWether() {
-        view?.showSharePopUp(description: weatherDescription)
+    func shareWether(with model: WeatherDescriptionViewModel?) {
+        view?.showSharePopUp(description: model)
     }
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
@@ -76,11 +74,14 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
         
         let dataRequest = entity.weather.first.flatMap { self.dataRequestForIcon(named: $0.icon) }
         
-        let firstDescription = entity.weather.first?.description ?? "-"
-        let description = firstDescription.prefix(1).uppercased() + firstDescription.dropFirst()
-        weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
+        let firstDescription: String? = entity.weather.first?.description
+        let details = firstDescription.flatMap { $0.prefix(1).uppercased() + $0.dropFirst().lowercased() }
+        let description = WeatherDescriptionViewModel.WeatherDescription(temperature: Int(entity.main.temperature),
+                                                                         temperatureUnit: .celsius,
+                                                                         details: details)
+        let weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
                                                              locationDescription: "\(entity.name), \(entity.system.country)",
-                                                             weatherDescription: "\(Int(entity.main.temperature))° | \(description)")
+                                                             weatherDescription: description )
         let model = WeatherDetailsViewModel(title: "Today",
                                             weatherDescription: weatherDescription,
                                             wetherParameters: parameters)

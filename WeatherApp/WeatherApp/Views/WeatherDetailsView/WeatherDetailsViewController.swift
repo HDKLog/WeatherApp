@@ -153,7 +153,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         configureWeatherParameters(parameters: model.wetherParameters)
         shareView.configure(with: "Share")
         shareView.buttonAction = { [weak self] button in
-            self?.presenter?.shareWether()
+            self?.presenter?.shareWether(with: model.weatherDescription)
         }
     }
     
@@ -167,7 +167,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         guard let descriptionModel = description else { return }
         
         // Setting description
-        let firstActivityItem = "\(descriptionModel.weatherDescription ?? ""), \(descriptionModel.locationDescription ?? "")"
+        let firstActivityItem = "\(descriptionModel.weatherDescription?.description ?? ""), \(descriptionModel.locationDescription ?? "")"
         
         let activityViewController : UIActivityViewController = UIActivityViewController(
             activityItems: [firstActivityItem], applicationActivities: nil)

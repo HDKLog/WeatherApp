@@ -21,16 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let weatherAppGateway = WeatherAppGatewayClient()
         let weatherAppUseCase = WeatherAppUseCase(gateway: weatherAppGateway)
         
-        let rootViewControler = WeatherDetailsViewController()
-        let presenter = WeatherDetailsPresenter(view: rootViewControler, router: router, weatherAppUseCase: weatherAppUseCase)
-        rootViewControler.presenter = presenter
+        let detailsViewController = WeatherDetailsViewController()
+        let presenter = WeatherDetailsPresenter(view: detailsViewController, router: router, weatherAppUseCase: weatherAppUseCase)
+        detailsViewController.presenter = presenter
         
         let forecastViewController = WeatherForecastViewController()
         let forecastPresenter = WeatherForecastPresenter(view: forecastViewController, router: router, weatherAppUseCase: weatherAppUseCase)
         forecastViewController.presenter = forecastPresenter
         
         router.viewControllers = [
-            UINavigationController(rootViewController: rootViewControler),
+            UINavigationController(rootViewController: detailsViewController),
             UINavigationController(rootViewController: forecastViewController)
         ]
         
@@ -41,4 +41,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
-

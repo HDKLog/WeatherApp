@@ -7,20 +7,12 @@
 
 import UIKit
 
+protocol WeatherDescriptionIconDataLoader {
+    func loadDataForIcon(named name: String?, complition: @escaping ((Data) -> Void))
+}
+
 struct WeatherDescriptionViewModel {
     
-    struct DataRequest {
-        
-        typealias DataHendler = (Data) -> Void
-        typealias DataRequest = (@escaping DataHendler) -> Void
-        
-        var requestClouser: DataRequest
-        
-        func requestData(handler: @escaping DataHendler) {
-            requestClouser(handler)
-        }
-    }
-
     struct WeatherDescription: CustomStringConvertible {
         enum TemperatureUnit: String {
             case celsius = "C"
@@ -34,7 +26,8 @@ struct WeatherDescriptionViewModel {
         var description: String { "\(temperature)°\(temperatureUnit.rawValue) \(details.flatMap { " | " + $0 } ?? "" )" }
     }
     
-    let weatherImage: DataRequest?
+    let weatherIconName: String?
+    let weatherIconLoader: WeatherDescriptionIconDataLoader?
     let locationDescription: String?
     let weatherDescription: WeatherDescription?
 

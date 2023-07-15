@@ -10,8 +10,7 @@ import XCTest
 @testable import WeatherApp
 class WeatherDetailsViewControllerTest: XCTestCase {
     
-    class Presenter: WeatherDetailsPresentation {
-
+    class Presenter: WeatherDetailsPresentation, WeatherDescriptionIconDataLoader {
         var viewDidLoaded = false
         func viewDidLoad() {
             viewDidLoaded = true
@@ -21,6 +20,15 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         var shareWetherModels: [WeatherDescriptionViewModel] = []
         func shareWether(with model: WeatherDescriptionViewModel?) {
             wetherShareTriggered = true
+        }
+
+        var loadDataForIconNamedCalls: Int = 0
+        var loadDataForIconNamedNames: [String?] = []
+        var loadDataForIconNamedComplition: [(Data) -> Void] = []
+        func loadDataForIcon(named name: String?, complition: @escaping ((Data) -> Void)) {
+            loadDataForIconNamedCalls += 1
+            loadDataForIconNamedNames.append(name)
+            loadDataForIconNamedComplition.append(complition)
         }
     }
 
@@ -41,9 +49,9 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     }
     
     func test_viewController_renderTitleForViewModel() {
-        
-        let imageData = Data()
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: nil,
                                                            locationDescription: nil,
                                                            weatherDescription: nil)
 
@@ -64,7 +72,8 @@ class WeatherDetailsViewControllerTest: XCTestCase {
     
     func test_viewController_renderLocationDescriptionForViewModel() {
 
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(Data()) },
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: nil,
                                                            locationDescription: "a Loction Description",
                                                            weatherDescription: nil)
 
@@ -78,7 +87,8 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         let weatherDescription = WeatherDescriptionViewModel.WeatherDescription(temperature: 1,
                                                                                 temperatureUnit: .celsius,
                                                                                 details: "a Weather Details")
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(Data()) },
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: nil,
                                                            locationDescription: nil,
                                                            weatherDescription: weatherDescription)
 
@@ -86,28 +96,49 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         
         XCTAssertEqual(sut.descriptionView.weatherDescriptionLabel.text, weatherDescription.description)
     }
-    
-    func test_viewController_renderWeatherImageForViewModel() {
-        
-        let imageData = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage().pngData()!
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+
+    func test_viewController_loadWeatherImageForViewModel() {
+
+        let presenter = Presenter()
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: "010",
+                                                           weatherIconLoader: presenter,
                                                            locationDescription: nil,
                                                            weatherDescription: nil)
 
-        let sut = makeSut(descriptionViewModel: descriptionModel)
+        let sut = makeSut(descriptionViewModel: descriptionModel, presenter: presenter)
         sut.loadViewIfNeeded()
+
+        XCTAssertEqual(presenter.loadDataForIconNamedNames.first, descriptionModel.weatherIconName)
+    }
+    
+    func test_viewController_renderWeatherImageForViewModel() {
+
+        let presenter = Presenter()
+        let imageData = DesignBook.Image.Icon.Weather.Cloud.rain.uiImage().pngData()!
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: presenter,
+                                                           locationDescription: nil,
+                                                           weatherDescription: nil)
+
+        let sut = makeSut(descriptionViewModel: descriptionModel, presenter: presenter)
+        sut.loadViewIfNeeded()
+
+        presenter.loadDataForIconNamedComplition.first?(imageData)
         
         XCTAssertNotNil(sut.descriptionView.weatherImage.image)
     }
     
     func test_viewController_notRenderInvalidWeatherImageForViewModel() {
 
-        let imageData = Data()
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+        let presenter = Presenter()
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: presenter,
                                                            locationDescription: nil,
                                                            weatherDescription: nil)
 
-        let sut = makeSut(descriptionViewModel: descriptionModel)
+        presenter.loadDataForIconNamedComplition.first?(Data())
+
+        let sut = makeSut(descriptionViewModel: descriptionModel, presenter: presenter)
         sut.loadViewIfNeeded()
         
         XCTAssertNil(sut.descriptionView.weatherImage.image)
@@ -175,11 +206,11 @@ class WeatherDetailsViewControllerTest: XCTestCase {
 
     func test_viewController_renderWeatherDescriptionDirectionForPropertyCellViewModel() {
 
-        let imageData = Data()
         let value = Double.random(in: 011...349)
         let direction =  WeatherPropertyCellViewModel.DirectionDescription(direction: value)
         let propertiesModel = [WeatherPropertyCellViewModel(property: direction)]
-        let descriptionModel = WeatherDescriptionViewModel(weatherImage: WeatherDescriptionViewModel.DataRequest { $0(imageData) },
+        let descriptionModel = WeatherDescriptionViewModel(weatherIconName: nil,
+                                                           weatherIconLoader: nil,
                                                            locationDescription: nil,
                                                            weatherDescription: nil)
 

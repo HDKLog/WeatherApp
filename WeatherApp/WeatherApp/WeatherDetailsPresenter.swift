@@ -47,20 +47,6 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             }
         }
     }
-
-    private func dataRequestForIcon(named name: String) -> WeatherDescriptionViewModel.DataRequest {
-
-        WeatherDescriptionViewModel.DataRequest { [weak self] handler in
-            self?.weatherAppUseCase?.getIcon(named: name) { [weak self] result in
-                switch result {
-                case .success(let data):
-                    handler(data)
-                case .failure(let error):
-                    self?.view?.displayError(error: error)
-                }
-            }
-        }
-    }
     
     private func  handle(entity: GeographicWeather) {
         
@@ -72,14 +58,13 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             WeatherPropertyCellViewModel(property: WeatherPropertyCellViewModel.DirectionDescription(direction: entity.wind.degrees))
         ]
         
-        let dataRequest = entity.weather.first.flatMap { self.dataRequestForIcon(named: $0.icon) }
-        
         let firstDescription: String? = entity.weather.first?.description
         let details = firstDescription.flatMap { $0.prefix(1).uppercased() + $0.dropFirst().lowercased() }
         let description = WeatherDescriptionViewModel.WeatherDescription(temperature: Int(entity.main.temperature),
                                                                          temperatureUnit: .celsius,
                                                                          details: details)
-        let weatherDescription = WeatherDescriptionViewModel(weatherImage: dataRequest,
+        let weatherDescription = WeatherDescriptionViewModel(weatherIconName: entity.weather.first?.icon,
+                                                             weatherIconLoader: self,
                                                              locationDescription: "\(entity.name), \(entity.system.country)",
                                                              weatherDescription: description )
         let model = WeatherDetailsViewModel(title: "Today",
@@ -96,6 +81,20 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
                 self?.loadGeograpicWeather(coordinates: location)
             case .failure(let error):
                 self?.loadGeograpicWeather(coordinates:GeographicLocation.defaultCoordinates)
+                self?.view?.displayError(error: error)
+            }
+        }
+    }
+}
+
+extension WeatherDetailsPresenter: WeatherDescriptionIconDataLoader {
+    func loadDataForIcon(named name: String?, complition: @escaping ((Data) -> Void)) {
+        guard let iconName = name else { return }
+        weatherAppUseCase?.getIcon(named: iconName) { [weak self] result in
+            switch result {
+            case .success(let data):
+                complition(data)
+            case .failure(let error):
                 self?.view?.displayError(error: error)
             }
         }

@@ -46,39 +46,39 @@ final class WeatherDetailsPresenterTest: XCTestCase {
 
     class UseCase: WeatherAppUseableCase {
 
-        var getGeographicWeatherForecastForCalls: Int = 0
-        var getGeographicWeatherForecastForCoordinates: [WeatherApp.GeographicLocation] = []
-        var getGeographicWeatherForecastForCompletions: [WeatherApp.GeographicWeatherForecastResult] = []
-        func getGeographicWeatherForecast(for coordinates: WeatherApp.GeographicLocation, completion: @escaping WeatherApp.GeographicWeatherForecastResult) {
-            getGeographicWeatherForecastForCalls += 1
-            getGeographicWeatherForecastForCoordinates.append(coordinates)
-            getGeographicWeatherForecastForCompletions.append(completion)
+        var getGeographicWeatherForecastCalls: Int = 0
+        var getGeographicWeatherForecastGeographicLocations: [GeographicLocation] = []
+        var getGeographicWeatherForecastCompletions: [GeographicWeatherForecastResult] = []
+        func getGeographicWeatherForecast(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherForecastResult) {
+            getGeographicWeatherForecastCalls += 1
+            getGeographicWeatherForecastGeographicLocations.append(coordinates)
+            getGeographicWeatherForecastCompletions.append(completion)
         }
 
         var getGeographicWeatherForCalls: Int = 0
-        var getGeographicWeatherForCoordinates: [WeatherApp.GeographicLocation] = []
-        var getGeographicWeatherForCompletions: [WeatherApp.GeographicWeatherResult] = []
-        func getGeographicWeather(for coordinates: WeatherApp.GeographicLocation, completion: @escaping WeatherApp.GeographicWeatherResult) {
+        var getGeographicWeatherForCoordinates: [GeographicLocation] = []
+        var getGeographicWeatherForCompletions: [GeographicWeatherResult] = []
+        func getGeographicWeather(for coordinates: GeographicLocation, completion: @escaping GeographicWeatherResult) {
             getGeographicWeatherForCalls += 1
             getGeographicWeatherForCoordinates.append(coordinates)
             getGeographicWeatherForCompletions.append(completion)
         }
 
         var getCurrentLocationCalls: Int = 0
-        var getCurrentLocationCompletions: [WeatherApp.GeographicLocationResult] = []
-        func getCurrentLocation(completion: @escaping WeatherApp.GeographicLocationResult) {
+        var getCurrentLocationCompletions: [GeographicLocationResult] = []
+        func getCurrentLocation(completion: @escaping GeographicLocationResult) {
             getCurrentLocationCalls += 1
             getCurrentLocationCompletions.append(completion)
         }
 
         var getIconCalls: Int = 0
-        var getIconCompletions: [WeatherApp.GeographicWeatherIconResult] = []
-        func getIcon(named: String, completion: @escaping WeatherApp.GeographicWeatherIconResult) {
+        var getIconNames: [String] = []
+        var getIconCompletions: [GeographicWeatherIconResult] = []
+        func getIcon(named: String, completion: @escaping GeographicWeatherIconResult) {
             getIconCalls += 1
+            getIconNames.append(named)
             getIconCompletions.append(completion)
         }
-
-
     }
 
     var mokedModel: GeographicWeather {
@@ -87,7 +87,7 @@ final class WeatherDetailsPresenterTest: XCTestCase {
                           base: "Base",
                           main: GeographicWeather.Parameters(temperature: 1.0, feelsLike: 1, temperatureMinimum: 1, temperatureMaximum: 1, pressure: 1, humidity: 1),
                           visibility: 1,
-                          wind: GeographicWeather.Wind(speed: 1, degrees: 1),
+                          wind: GeographicWeather.Wind(speed: 1, degrees: 012),
                           clouds: GeographicWeather.Clouds(all: 1),
                           data: 1,
                           system: GeographicWeather.System(type: 1, id: 1, country: "Country", sunrise: 1, sunset: 1),
@@ -224,7 +224,7 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         useCase.getCurrentLocationCompletions.first?(.failure(error))
         useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
 
-        //XCTAssertEqual(view.configureWithModelModels.first, mokedModel)
+        XCTAssertNotNil(view.configureWithModelModels.first)
     }
 
     func test_presenter_onViewDidLoad_onLoadCurrentLocationFailureAndLoadDefaultLocationWeatherFailureDisplaysError() {

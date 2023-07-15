@@ -37,4 +37,6 @@ struct WeatherDescriptionViewModel {
     let weatherImage: DataRequest?
     let locationDescription: String?
     let weatherDescription: WeatherDescription?
+
+    var sharedDescription: String { "\(weatherDescription?.description ?? ""), \(locationDescription ?? "")" }
 }

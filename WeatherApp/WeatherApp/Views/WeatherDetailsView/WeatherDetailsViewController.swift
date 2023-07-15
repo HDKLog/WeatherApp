@@ -163,12 +163,10 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
     }
     
     func showSharePopUp(description: WeatherDescriptionViewModel?) {
-        
-        guard let descriptionModel = description else { return }
-        
+
         // Setting description
-        let firstActivityItem = "\(descriptionModel.weatherDescription?.description ?? ""), \(descriptionModel.locationDescription ?? "")"
-        
+        guard let firstActivityItem = description?.sharedDescription else { return }
+
         let activityViewController : UIActivityViewController = UIActivityViewController(
             activityItems: [firstActivityItem], applicationActivities: nil)
         
@@ -181,7 +179,6 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         ]
         
         self.present(activityViewController, animated: true, completion: nil)
-
             
     }
     

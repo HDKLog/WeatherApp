@@ -62,7 +62,14 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
                        forCellReuseIdentifier: WeatherForecastTableViewCellModel.reuseId)
         table.register(WeatherForecastTableViewHeaderView.self,
                        forHeaderFooterViewReuseIdentifier: WeatherForecastTableViewHeaderViewModel.reusableId)
+        table.refreshControl = self.refreshControl
         return table
+    }()
+
+    lazy var refreshControl: UIRefreshControl = {
+        let control = UIRefreshControl()
+        control.addTarget(self, action: #selector(refreshTable), for: .valueChanged)
+        return control
     }()
     
     var sections: [WeatherForecastViewModel.Section] = []
@@ -126,6 +133,11 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
+
+    @objc
+    func refreshTable(sender: Any) {
+        presenter?.reloadData()
+    }
     
     func configure(with model: WeatherForecastViewModel) {
         titleLabel.text = model.title
@@ -165,10 +177,12 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
         self.present(alert, animated: true, completion: nil)
+        self.refreshControl.endRefreshing()
     }
     
     func reloadList() {
         self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
     }
 
 }

@@ -9,6 +9,7 @@ import UIKit
 
 protocol WeatherForecastPresentation {
     func viewDidLoad()
+    func reloadData()
 }
 
 class WeatherForecastPresenter: WeatherForecastPresentation {
@@ -26,6 +27,10 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     
     func viewDidLoad() {
         
+        loadForecast()
+    }
+
+    func reloadData() {
         loadForecast()
     }
     

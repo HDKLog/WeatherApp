@@ -4,7 +4,7 @@ workspace 'WeatherApp'
 
 
 def weatherapp_pods
-  pod 'Shimmer', '~> 1.0'
+  pod 'SkeletonView', '~> 1.0'
 end
 
 target 'WeatherApp' do

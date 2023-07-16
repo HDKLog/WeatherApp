@@ -16,6 +16,11 @@ class WeatherForecastViewControllerTest: XCTestCase {
             viewDidLoaded = true
         }
 
+        var reloadDataCalls: Int = 0
+        func reloadData() {
+            reloadDataCalls += 1
+        }
+
         var loadDataForIconNamedCalls: Int = 0
         var loadDataForIconNamedNames: [String?] = []
         var loadDataForIconNamedComplition: [(Data) -> Void] = []
@@ -52,6 +57,17 @@ class WeatherForecastViewControllerTest: XCTestCase {
         sut.loadViewIfNeeded()
         
         XCTAssertTrue(presenter.viewDidLoaded)
+    }
+
+    func test_viewController_triggerReloadDataAfterPullToRefresh() {
+
+        let presenter = Presenter()
+        let sut = makeSut(presenter: presenter)
+
+        sut.loadViewIfNeeded()
+        sut.tableView.refreshControl?.sendActions(for: .valueChanged)
+        
+        XCTAssertEqual(presenter.reloadDataCalls, 1)
     }
 
     func test_viewController_hasCellsForecastViewModelWithWeatherForecastSectionsRows() {

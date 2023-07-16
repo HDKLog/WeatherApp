@@ -95,6 +95,7 @@ extension WeatherDetailsPresenter: WeatherDescriptionIconDataLoader {
             case .success(let data):
                 complition(data)
             case .failure(let error):
+                complition(Data())
                 self?.view?.displayError(error: error)
             }
         }

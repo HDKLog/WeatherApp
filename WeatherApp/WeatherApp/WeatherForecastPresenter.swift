@@ -13,12 +13,12 @@ protocol WeatherForecastPresentation {
 
 class WeatherForecastPresenter: WeatherForecastPresentation {
     
-    var view: WeatherForecastView!
-    var router: WeatherAppRoutering!
+    var view: WeatherForecastView?
+    var router: WeatherAppRoutering?
     
-    let weatherAppUseCase: WeatherAppUseableCase!
+    let weatherAppUseCase: WeatherAppUseableCase?
     
-    init(view: WeatherForecastView, router: WeatherAppRoutering, weatherAppUseCase: WeatherAppUseableCase) {
+    init(view: WeatherForecastView?, router: WeatherAppRoutering?, weatherAppUseCase: WeatherAppUseableCase?) {
         self.view = view
         self.router = router
         self.weatherAppUseCase = weatherAppUseCase
@@ -28,26 +28,10 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
         
         loadForecast()
     }
-
-    private func dataRequestForIcon(named name: String) -> WeatherForecastTableViewCellModel.DataRequest {
-
-        WeatherForecastTableViewCellModel.DataRequest { [weak self] handler in
-            self?.weatherAppUseCase.getIcon(named: name) { [weak self] result in
-                switch result {
-                case .success(let data):
-                    handler(data)
-                case .failure(let error):
-                    self?.view.displayError(error: error)
-                }
-            }
-        }
-    }
     
     func handleResult(entity: GeographicWeatherForecast) {
         
         let rows: [WeatherForecastViewModel.Section] = entity.list.map {
-            
-            let dataRequest = $0.weather.first.flatMap { weather in dataRequestForIcon(named: weather.icon) }
             
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -56,7 +40,8 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
             let date = Date(timeIntervalSince1970: $0.dateTime)
             let description = $0.weather.first?.description ?? ""
             let normalizedDescription = description.prefix(1).uppercased() + description.dropFirst()
-            let rowModel = WeatherForecastTableViewCellModel(image: dataRequest,
+            let rowModel = WeatherForecastTableViewCellModel(iconName: $0.weather.first?.icon,
+                                                             iconLoader: self,
                                                              time: dateFormatter.string(from: date),
                                                              description: normalizedDescription,
                                                              temperature: "\(Int($0.main.temperature))°")
@@ -78,30 +63,46 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
         
         let model = WeatherForecastViewModel(title: "\(entity.city.name), \(entity.city.country)",
                                              sections: sections)
-        view.configure(with: model)
-        view.reloadList()
+        view?.configure(with: model)
+        view?.reloadList()
     }
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
-        weatherAppUseCase.getGeographicWeatherForecast(for: coordinates) { [weak self] result in
+        weatherAppUseCase?.getGeographicWeatherForecast(for: coordinates) { [weak self] result in
             switch result {
             case .success(let entity):
                 self?.handleResult(entity: entity)
             case .failure(let error):
-                self?.view.displayError(error: error)
+                self?.view?.displayError(error: error)
             }
         }
     }
     
     private func loadForecast() {
         
-        weatherAppUseCase.getCurrentLocation {[weak self] result in
+        weatherAppUseCase?.getCurrentLocation {[weak self] result in
             switch result {
             case .success(let location):
                 self?.loadGeograpicWeather(coordinates: location)
             case .failure(let error):
                 self?.loadGeograpicWeather(coordinates: GeographicLocation.defaultCoordinates)
-                self?.view.displayError(error: error)
+                self?.view?.displayError(error: error)
+            }
+        }
+    }
+}
+
+extension WeatherForecastPresenter: WeatherForecastTableViewCellIconDataLoader {
+    func loadDataForIcon(named name: String?, complition: @escaping ((Data) -> Void)) {
+        guard let iconName = name else { return }
+
+        weatherAppUseCase?.getIcon(named: iconName) { [weak self] result in
+            switch result {
+            case .success(let data):
+                complition(data)
+            case .failure(let error):
+                complition(Data())
+                self?.view?.displayError(error: error)
             }
         }
     }

@@ -7,23 +7,16 @@
 
 import UIKit
 
+protocol WeatherForecastTableViewCellIconDataLoader {
+    func loadDataForIcon(named name: String?, complition: @escaping ((Data) -> Void))
+}
+
 struct WeatherForecastTableViewCellModel {
     
     static let reuseId = "WeatherForecastCell"
     
-    struct DataRequest {
-        
-        typealias DataHendler = (Data) -> Void
-        typealias DataRequest = (@escaping DataHendler) -> Void
-        
-        var requestClouser: DataRequest
-        
-        func requestData(handler: @escaping DataHendler) {
-            requestClouser(handler)
-        }
-    }
-    
-    let image: DataRequest?
+    let iconName: String?
+    let iconLoader: WeatherForecastTableViewCellIconDataLoader?
     let time: String?
     let description: String?
     let temperature: String?

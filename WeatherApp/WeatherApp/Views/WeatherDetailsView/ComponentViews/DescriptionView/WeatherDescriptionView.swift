@@ -110,12 +110,15 @@ class WeatherDescriptionView: UIView {
     private func setupSeparator() {
         bottomSeparator.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomSeparator)
-        NSLayoutConstraint.activate([
-            bottomSeparator.heightAnchor.constraint(equalToConstant: 2),
-            bottomSeparator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 64),
-            bottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -64),
-            bottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+
+        let height = bottomSeparator.heightAnchor.constraint(equalToConstant: 2)
+        let bottom = bottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor)
+        let leading = bottomSeparator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 64)
+        let trailing = bottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -64)
+
+        trailing.priority = UILayoutPriority(999)
+
+        NSLayoutConstraint.activate([ height, leading, trailing, bottom])
     }
     
     func configure(with model:WeatherDescriptionViewModel?) {

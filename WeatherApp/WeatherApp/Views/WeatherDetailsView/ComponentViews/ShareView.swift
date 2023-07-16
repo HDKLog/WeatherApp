@@ -50,12 +50,16 @@ class ShareView: UIView {
     private func setupSeparator() {
         topSeparator.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topSeparator)
-        NSLayoutConstraint.activate([
-            topSeparator.heightAnchor.constraint(equalToConstant: 2),
-            topSeparator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 64),
-            topSeparator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -64),
-            topSeparator.topAnchor.constraint(equalTo: topAnchor)
-        ])
+
+        let height = topSeparator.heightAnchor.constraint(equalToConstant: 2)
+        let top = topSeparator.topAnchor.constraint(equalTo: topAnchor)
+        let leading = topSeparator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 64)
+        let trailing = topSeparator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -64)
+
+        trailing.priority = UILayoutPriority(999)
+
+
+        NSLayoutConstraint.activate([ height, top, leading, trailing])
     }
     
     func configure(with model: String ) {

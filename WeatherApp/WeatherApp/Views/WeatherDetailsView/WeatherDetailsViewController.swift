@@ -6,14 +6,17 @@
 //
 
 import UIKit
+import SkeletonView
 
 protocol WeatherDetailsView {
     func configure(with model: WeatherDetailsViewModel)
+    func startLoadingAnimation()
+    func stopLoadingAnimation()
     func showSharePopUp(description: WeatherDescriptionViewModel?)
     func displayError(error: Error)
 }
 
-class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UICollectionViewDataSource {
+class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
     
     var presenter: WeatherDetailsPresentation!
     
@@ -84,6 +87,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         super.viewDidLoad()
         setupView()
         setupSubviews()
+        setupSkeletonParameters()
         presenter?.viewDidLoad()
     }
     
@@ -101,13 +105,17 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         setupParametersView()
         setupShareView()
     }
+
+    private func setupSkeletonParameters() {
+        stackView.isSkeletonable = true
+        parametersView.isSkeletonable = true
+    }
     
     private func setupTitleLabel() {
         self.navigationItem.titleView = titleLabel
     }
     
     private func setupTopSeparator() {
-        
         view.addSubview(topSeparatorViews)
         topSeparatorViews.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -156,6 +164,14 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
             self?.presenter?.shareWether(with: model.weatherDescription)
         }
     }
+
+    func startLoadingAnimation() {
+        stackView.showAnimatedGradientSkeleton()
+    }
+
+    func stopLoadingAnimation() {
+        stackView.hideSkeleton()
+    }
     
     func configureWeatherParameters(parameters: [WeatherPropertyCellViewModel]) {
         self.parameters = parameters
@@ -179,7 +195,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         ]
         
         self.present(activityViewController, animated: true, completion: nil)
-            
+
     }
     
     func displayError(error: Error) {
@@ -187,8 +203,10 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView, UIColl
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
         self.present(alert, animated: true, completion: nil)
     }
-    
+}
     // MARK: - UICollectionViewDataSource conformance
+extension WeatherDetailsViewController: UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return parameters.count
     }

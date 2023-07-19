@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class WeatherPropertyCollectionViewCell: UICollectionViewCell {
     
@@ -24,6 +25,7 @@ class WeatherPropertyCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupContentViews()
+        setupSkeletonParameters()
     }
     
     required init?(coder: NSCoder) {
@@ -47,6 +49,20 @@ class WeatherPropertyCollectionViewCell: UICollectionViewCell {
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
         ])
+    }
+
+    private func setupSkeletonParameters() {
+        self.contentView.isSkeletonable = true
+
+//        weatherImage.isSkeletonable = true
+//
+//        locationDescriptionLabel.isSkeletonable = true
+//        locationDescriptionLabel.text = "No location info, CC"
+//        locationDescriptionLabel.lastLineFillPercent = 100
+//
+//        weatherDescriptionLabel.isSkeletonable = true
+//        weatherDescriptionLabel.text = "??°C | No weather details"
+//        weatherDescriptionLabel.lastLineFillPercent = 100
     }
     
     

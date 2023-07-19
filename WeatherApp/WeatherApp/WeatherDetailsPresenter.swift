@@ -27,6 +27,8 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
     }
     
     func viewDidLoad() {
+        view?.configure(with: .templateModel)
+        view?.startLoadingAnimation()
         loadWeather()
     }
     
@@ -40,9 +42,10 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
         weatherAppUseCase?.getGeographicWeather(for: coordinates) { [weak self] result in
             switch result {
             case .success(let weatherEntity):
+                self?.view?.stopLoadingAnimation()
                 self?.handle(entity:weatherEntity)
-                
             case .failure(let error):
+                self?.view?.stopLoadingAnimation()
                 self?.view?.displayError(error: error)
             }
         }
@@ -80,8 +83,8 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             case .success(let location):
                 self?.loadGeograpicWeather(coordinates: location)
             case .failure(let error):
-                self?.loadGeograpicWeather(coordinates:GeographicLocation.defaultCoordinates)
                 self?.view?.displayError(error: error)
+                self?.loadGeograpicWeather(coordinates:GeographicLocation.defaultCoordinates)
             }
         }
     }

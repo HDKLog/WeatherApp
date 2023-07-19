@@ -26,7 +26,8 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     }
     
     func viewDidLoad() {
-        
+        view?.configure(with: .templateModel)
+        view?.startLoadingAnimation()
         loadForecast()
     }
 
@@ -74,6 +75,7 @@ class WeatherForecastPresenter: WeatherForecastPresentation {
     
     private func loadGeograpicWeather(coordinates: GeographicLocation) {
         weatherAppUseCase?.getGeographicWeatherForecast(for: coordinates) { [weak self] result in
+            self?.view?.stopLoadingAnimation()
             switch result {
             case .success(let entity):
                 self?.handleResult(entity: entity)

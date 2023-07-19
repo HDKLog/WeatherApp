@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class WeatherForecastTableViewHeaderView: UITableViewHeaderFooterView {
     
@@ -23,6 +24,7 @@ class WeatherForecastTableViewHeaderView: UITableViewHeaderFooterView {
     private func setup() {
         contentView.backgroundColor = UIColor(named: "color-background-list")
         setupSubviews()
+        setupSkeletonParameters()
     }
     
     func setupSubviews() {
@@ -34,6 +36,15 @@ class WeatherForecastTableViewHeaderView: UITableViewHeaderFooterView {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
+    }
+
+    private func setupSkeletonParameters() {
+        self.isSkeletonable = true
+        contentView.isSkeletonable = true
+        titleLabel.isSkeletonable = true
+        titleLabel.lastLineFillPercent = 40
+        titleLabel.text = "Section"
+        titleLabel.skeletonTextLineHeight = .relativeToFont
     }
     
     func configure(with model: WeatherForecastTableViewHeaderViewModel) {

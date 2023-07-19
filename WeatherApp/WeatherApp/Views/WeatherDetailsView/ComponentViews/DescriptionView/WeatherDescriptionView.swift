@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import SkeletonView
 
 class WeatherDescriptionView: UIView {
     
-    let weatherImage = UIImageView()
+    let weatherImage =  UIImageView()
     
     let locationDescriptionLabel: UILabel = {
         let label = UILabel()
@@ -40,6 +41,7 @@ class WeatherDescriptionView: UIView {
     convenience init() {
         self.init(frame: .zero)
         setupSubViews()
+        setupSkeletonParameters()
     }
     
     private func setupSubViews() {
@@ -49,6 +51,21 @@ class WeatherDescriptionView: UIView {
         setupWeatherDescriptionLabel()
         setupSeparator()
         modifyConstraints()
+    }
+
+    private func setupSkeletonParameters() {
+        self.isSkeletonable = true
+
+        weatherImage.isSkeletonable = true
+
+        locationDescriptionLabel.isSkeletonable = true
+        locationDescriptionLabel.lastLineFillPercent = 100
+
+        weatherDescriptionLabel.isSkeletonable = true
+        weatherDescriptionLabel.lastLineFillPercent = 100
+
+        bottomSeparator.isSkeletonable = true
+        bottomSeparator.isHiddenWhenSkeletonIsActive = true
     }
     
     private func setupWeatherImageView() {

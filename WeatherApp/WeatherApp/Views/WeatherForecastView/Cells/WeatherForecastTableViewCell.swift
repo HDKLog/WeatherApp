@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class WeatherForecastTableViewCell: UITableViewCell {
     
@@ -35,6 +36,7 @@ class WeatherForecastTableViewCell: UITableViewCell {
         separatorInset = UIEdgeInsets(top: 0, left: 64, bottom: 0, right: 0)
         contentView.backgroundColor = DesignBook.Color.Background.list.uiColor()
         setupSubvies()
+        setupSkeletonParameters()
     }
     
     func setupSubvies() {
@@ -69,6 +71,24 @@ class WeatherForecastTableViewCell: UITableViewCell {
             temperatureLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             temperatureLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
         ])
+    }
+
+    private func setupSkeletonParameters() {
+        self.isSkeletonable = true
+        contentView.isSkeletonable = true
+        weatherImageView.isSkeletonable = true
+
+        timeLabel.isSkeletonable = true
+        timeLabel.text = "00:00"
+        timeLabel.lastLineFillPercent = 100
+
+        descriptionLabel.isSkeletonable = true
+        descriptionLabel.text = "weather description"
+        descriptionLabel.lastLineFillPercent = 100
+
+        temperatureLabel.isSkeletonable = true
+        temperatureLabel.text = "??°C"
+        temperatureLabel.lastLineFillPercent = 100
     }
     
     func configure(with model: WeatherForecastTableViewCellModel) {

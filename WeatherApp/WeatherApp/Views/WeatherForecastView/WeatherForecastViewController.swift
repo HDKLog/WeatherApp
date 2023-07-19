@@ -6,14 +6,17 @@
 //
 
 import UIKit
+import SkeletonView
 
 protocol WeatherForecastView {
     func configure(with model: WeatherForecastViewModel)
     func reloadList()
+    func startLoadingAnimation()
+    func stopLoadingAnimation()
     func displayError(error: Error)
 }
 
-class WeatherForecastViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, WeatherForecastView {
+class WeatherForecastViewController: UIViewController, WeatherForecastView {
     
     var presenter: WeatherForecastPresentation!
     
@@ -84,7 +87,7 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
         super.viewDidLoad()
         setup()
         setupSubviews()
-        
+        setupSkeletonParameters()
         presenter?.viewDidLoad()
     }
     
@@ -108,6 +111,12 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
         self.navigationController?.navigationBar.shadowImage = UIImage()
         setupTableView()
         setupTopSeparator()
+    }
+
+    private func setupSkeletonParameters() {
+        tableView.isSkeletonable = true
+        titleLabel.isSkeletonable = true
+        titleLabel.lastLineFillPercent = 100
     }
     
     private func setupTopSeparator() {
@@ -143,11 +152,36 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
         titleLabel.text = model.title
         sections = model.sections
     }
-    
+
+    func displayError(error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+        self.present(alert, animated: true, completion: nil)
+        self.refreshControl.endRefreshing()
+    }
+
+    func reloadList() {
+        self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
+    }
+
+    func startLoadingAnimation() {
+        tableView.showAnimatedGradientSkeleton()
+        titleLabel.showAnimatedGradientSkeleton()
+    }
+
+    func stopLoadingAnimation() {
+        tableView.hideSkeleton()
+        titleLabel.hideSkeleton()
+    }
+}
+
+extension WeatherForecastViewController: SkeletonTableViewDataSource {
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         sections[section].rows.count
     }
@@ -159,6 +193,22 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
         }
         return cell ?? UITableViewCell()
     }
+    
+
+    func numSections(in collectionSkeletonView: UITableView) -> Int {
+        return sections.count
+    }
+
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].rows.count
+    }
+
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        WeatherForecastTableViewCellModel.reuseId
+    }
+}
+
+extension WeatherForecastViewController: SkeletonTableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: WeatherForecastTableViewHeaderViewModel.reusableId)
@@ -172,17 +222,9 @@ class WeatherForecastViewController: UIViewController, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0
     }
-    
-    func displayError(error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
-        self.present(alert, animated: true, completion: nil)
-        self.refreshControl.endRefreshing()
-    }
-    
-    func reloadList() {
-        self.tableView.reloadData()
-        self.refreshControl.endRefreshing()
-    }
 
+    func collectionSkeletonView(_ skeletonView: UITableView, identifierForHeaderInSection section: Int) -> ReusableHeaderFooterIdentifier?
+    {
+        WeatherForecastTableViewHeaderViewModel.reusableId
+    }
 }

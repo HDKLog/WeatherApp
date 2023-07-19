@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ShareView: UIView {
     
@@ -31,11 +32,23 @@ class ShareView: UIView {
     convenience init() {
         self.init(frame: .zero)
         setupSubViews()
+        setupSkeletonParameters()
     }
     
     private func setupSubViews() {
         setupSeparator()
         setupButton()
+    }
+
+    private func setupSkeletonParameters() {
+        self.isSkeletonable = true
+
+        topSeparator.isSkeletonable = true
+        topSeparator.isHiddenWhenSkeletonIsActive = true
+
+        button.isSkeletonable = true
+        button.isHiddenWhenSkeletonIsActive = true
+
     }
     
     private func setupButton() {

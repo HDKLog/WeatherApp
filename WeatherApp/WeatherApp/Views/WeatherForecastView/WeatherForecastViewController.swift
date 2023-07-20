@@ -203,6 +203,10 @@ extension WeatherForecastViewController: SkeletonTableViewDataSource {
         sections[section].rows.count
     }
 
+    func collectionSkeletonView(_ skeletonView: UITableView, skeletonCellForRowAt indexPath: IndexPath) -> UITableViewCell? {
+        self.tableView(skeletonView, cellForRowAt: indexPath)
+    }
+
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
         WeatherForecastTableViewCellModel.reuseId
     }

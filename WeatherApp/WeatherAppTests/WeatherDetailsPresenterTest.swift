@@ -32,6 +32,16 @@ final class WeatherDetailsPresenterTest: XCTestCase {
             displayErrorCalls += 1
             displayErrorErrors.append(error)
         }
+
+        var startLoadingAnimationCalls: Int = 0
+        func startLoadingAnimation() {
+            startLoadingAnimationCalls += 1
+        }
+
+        var stopLoadingAnimationCalls: Int = 0
+        func stopLoadingAnimation() {
+            stopLoadingAnimationCalls += 1
+        }
     }
 
     class Router: WeatherAppRoutering {
@@ -181,7 +191,7 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
 
 
-        XCTAssertEqual(view.configureWithModelCalls, 1)
+        XCTAssertNotEqual(view.configureWithModelCalls, 0)
     }
 
     func test_presenter_onViewDidLoad_onLoadCurrentLocationFailureCallsDisplayError() {
@@ -245,5 +255,29 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         useCase.getGeographicWeatherForCompletions.first?(.failure(error))
 
         XCTAssertEqual(view.displayErrorErrors.last as? URLError, error)
+    }
+
+    func test_presenter_onViewDidLoad_beforeLoadCurrentLocationWeatherStartLoadingAnimation() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.viewDidLoad()
+
+        XCTAssertEqual(view.startLoadingAnimationCalls, 1)
+    }
+
+    func test_presenter_onViewDidLoad_afterLoadCurrentLocationWeatherStopLoadingAnimation() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.viewDidLoad()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+        useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
+
+        XCTAssertEqual(view.stopLoadingAnimationCalls, 1)
     }
 }

@@ -79,15 +79,12 @@ class WeatherForecastTableViewCell: UITableViewCell {
         weatherImageView.isSkeletonable = true
 
         timeLabel.isSkeletonable = true
-        timeLabel.text = "00:00"
         timeLabel.lastLineFillPercent = 100
 
         descriptionLabel.isSkeletonable = true
-        descriptionLabel.text = "weather description"
         descriptionLabel.lastLineFillPercent = 100
 
         temperatureLabel.isSkeletonable = true
-        temperatureLabel.text = "??°C"
         temperatureLabel.lastLineFillPercent = 100
     }
     

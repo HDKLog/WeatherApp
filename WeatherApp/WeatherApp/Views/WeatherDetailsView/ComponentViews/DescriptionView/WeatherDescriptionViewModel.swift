@@ -12,28 +12,11 @@ protocol WeatherDescriptionIconDataLoader {
 }
 
 struct WeatherDescriptionViewModel {
-
-    static var templateModel: WeatherDescriptionViewModel {
-        WeatherDescriptionViewModel(
-            weatherIconName: nil,
-            weatherIconLoader: nil,
-            locationDescription: "No location info, CC",
-            weatherDescription: .templateModel
-        )
-    }
     
     struct WeatherDescription: CustomStringConvertible {
         enum TemperatureUnit: String {
             case celsius = "C"
             case fahrenheit = "F"
-        }
-
-        static var templateModel: WeatherDescription{
-            WeatherDescription(
-                temperature: 0,
-                temperatureUnit: .celsius,
-                details: "No weather details"
-            )
         }
 
         let temperature: Int
@@ -49,4 +32,27 @@ struct WeatherDescriptionViewModel {
     let weatherDescription: WeatherDescription?
 
     var sharedDescription: String { "\(weatherDescription?.description ?? ""), \(locationDescription ?? "")" }
+}
+
+
+extension WeatherDescriptionViewModel {
+    static var templateModel: WeatherDescriptionViewModel {
+        WeatherDescriptionViewModel(
+            weatherIconName: "011",
+            weatherIconLoader: nil,
+            locationDescription: "No location info, CC",
+            weatherDescription: .templateModel
+        )
+    }
+}
+
+extension WeatherDescriptionViewModel.WeatherDescription {
+    static var templateModel: WeatherDescriptionViewModel.WeatherDescription{
+        WeatherDescriptionViewModel.WeatherDescription(
+            temperature: 0,
+            temperatureUnit: .celsius,
+            details: "No weather details"
+        )
+    }
+
 }

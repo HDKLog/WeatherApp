@@ -53,16 +53,6 @@ class WeatherPropertyCollectionViewCell: UICollectionViewCell {
 
     private func setupSkeletonParameters() {
         self.contentView.isSkeletonable = true
-
-//        weatherImage.isSkeletonable = true
-//
-//        locationDescriptionLabel.isSkeletonable = true
-//        locationDescriptionLabel.text = "No location info, CC"
-//        locationDescriptionLabel.lastLineFillPercent = 100
-//
-//        weatherDescriptionLabel.isSkeletonable = true
-//        weatherDescriptionLabel.text = "??°C | No weather details"
-//        weatherDescriptionLabel.lastLineFillPercent = 100
     }
     
     

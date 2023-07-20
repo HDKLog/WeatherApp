@@ -14,20 +14,22 @@ protocol WeatherForecastTableViewCellIconDataLoader {
 struct WeatherForecastTableViewCellModel {
     
     static let reuseId = "WeatherForecastCell"
-
-    static var templateModel: WeatherForecastTableViewCellModel {
-        WeatherForecastTableViewCellModel(
-            iconName: "001",
-            iconLoader: nil,
-            time: "12:00",
-            description: "some description",
-            temperature: "00"
-        )
-    }
     
     let iconName: String?
     let iconLoader: WeatherForecastTableViewCellIconDataLoader?
     let time: String?
     let description: String?
     let temperature: String?
+}
+
+extension WeatherForecastTableViewCellModel {
+    static var templateModel: WeatherForecastTableViewCellModel {
+        WeatherForecastTableViewCellModel(
+            iconName: "001",
+            iconLoader: nil,
+            time: "--:--",
+            description: "some description",
+            temperature: "--"
+        )
+    }
 }

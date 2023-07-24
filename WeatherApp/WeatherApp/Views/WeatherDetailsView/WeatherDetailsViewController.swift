@@ -14,6 +14,7 @@ protocol WeatherDetailsView {
     func stopLoadingAnimation()
     func showSharePopUp(description: WeatherDescriptionViewModel?)
     func displayError(error: Error)
+    func displayEmptyScreen()
 }
 
 class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
@@ -49,6 +50,28 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         return stack
+    }()
+
+
+    let emptyViewImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = DesignBook.Image.Icon.Weather.compass.uiImage()
+        return imageView
+    }()
+
+    let tapToReloadLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Tap to reload"
+        label.textColor = DesignBook.Color.Foreground.light.uiColor()
+        return label
+    }()
+
+    lazy var emptyView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(emptyViewDidTap))
+        view.addGestureRecognizer(gestureRecognizer)
+        return view
     }()
     
     let descriptionView = WeatherDescriptionView()
@@ -101,6 +124,7 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
         setupTitleLabel()
         setupTopSeparator()
         setupDescriptionView()
+        setupEmptyView()
         setupStackView()
         setupParametersView()
         setupShareView()
@@ -125,9 +149,36 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
             topSeparatorViews.heightAnchor.constraint(equalToConstant: 2)
         ])
     }
-    
+
     private func setupDescriptionView() {
         stackView.addArrangedSubview(descriptionView)
+    }
+
+    private func setupEmptyView() {
+        emptyView.isHidden = true
+        view.addSubview(emptyView)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emptyView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        emptyView.addSubview(emptyViewImageView)
+        emptyViewImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emptyViewImageView.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
+            emptyViewImageView.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor),
+        ])
+
+        emptyView.addSubview(tapToReloadLabel)
+        tapToReloadLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tapToReloadLabel.centerXAnchor.constraint(equalTo: emptyViewImageView.centerXAnchor),
+            tapToReloadLabel.topAnchor.constraint(equalTo: emptyViewImageView.bottomAnchor, constant: 64),
+        ])
+
     }
     
     private func setupStackView() {
@@ -153,6 +204,11 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
     private func setupShareView() {
         stackView.addArrangedSubview(shareView)
     }
+
+    @objc
+    private func emptyViewDidTap(sender: UIGestureRecognizer) {
+        presenter.reloadData()
+    }
     
     // MARK: - WeatherDetailsView conformance
     public func configure( with model: WeatherDetailsViewModel) {
@@ -163,6 +219,9 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
         shareView.buttonAction = { [weak self] button in
             self?.presenter?.shareWether(with: model.weatherDescription)
         }
+
+        self.stackView.isHidden = false
+        self.emptyView.isHidden = true
     }
 
     func startLoadingAnimation() {
@@ -202,6 +261,11 @@ class WeatherDetailsViewController: UIViewController, WeatherDetailsView {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
         self.present(alert, animated: true, completion: nil)
+    }
+
+    func displayEmptyScreen() {
+        self.stackView.isHidden = true
+        self.emptyView.isHidden = false
     }
 }
     // MARK: - UICollectionViewDataSource conformance

@@ -9,6 +9,12 @@ import Foundation
 import UIKit
 
 struct WeatherDetailsViewModel {
+    let title: String?
+    let weatherDescription: WeatherDescriptionViewModel?
+    let wetherParameters: [WeatherPropertyCellViewModel]
+}
+
+extension WeatherDetailsViewModel {
     static var templateModel: WeatherDetailsViewModel  {
         WeatherDetailsViewModel(
             title: "Today",
@@ -16,7 +22,4 @@ struct WeatherDetailsViewModel {
             wetherParameters: []
         )
     }
-    let title: String?
-    let weatherDescription: WeatherDescriptionViewModel?
-    let wetherParameters: [WeatherPropertyCellViewModel]
 }

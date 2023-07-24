@@ -10,6 +10,7 @@ import CoreLocation
 
 protocol WeatherDetailsPresentation {
     func viewDidLoad()
+    func reloadData()
     func shareWether(with model: WeatherDescriptionViewModel?)
 }
 
@@ -31,6 +32,12 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
         view?.startLoadingAnimation()
         loadWeather()
     }
+
+    func reloadData() {
+        view?.configure(with: .templateModel)
+        view?.startLoadingAnimation()
+        loadWeather()
+    }
     
     
     
@@ -47,6 +54,7 @@ class WeatherDetailsPresenter: NSObject, WeatherDetailsPresentation {
             case .failure(let error):
                 self?.view?.stopLoadingAnimation()
                 self?.view?.displayError(error: error)
+                self?.view?.displayEmptyScreen()
             }
         }
     }

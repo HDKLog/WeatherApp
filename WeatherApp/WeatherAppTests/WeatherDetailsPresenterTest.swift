@@ -42,6 +42,11 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         func stopLoadingAnimation() {
             stopLoadingAnimationCalls += 1
         }
+
+        var displayEmptyScreenCalls: Int = 0
+        func displayEmptyScreen() {
+            displayEmptyScreenCalls += 1
+        }
     }
 
     class Router: WeatherAppRoutering {
@@ -279,5 +284,103 @@ final class WeatherDetailsPresenterTest: XCTestCase {
         useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
 
         XCTAssertEqual(view.stopLoadingAnimationCalls, 1)
+    }
+
+    func test_presenter_onReloadData_startsLoadingAnimation() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+
+        XCTAssertEqual(view.startLoadingAnimationCalls, 1)
+    }
+
+    func test_presenter_onReloadData_beforeLoadCurrentLocationWeatherStartsLoadingAnimation() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+
+        XCTAssertEqual(view.startLoadingAnimationCalls, 1)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationSucessLoadsCorrectLocationWeather() {
+
+        let location = GeographicLocation(latitude: 1, longitude: 1)
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.success(location))
+
+        XCTAssertEqual(useCase.getGeographicWeatherForCoordinates.first, location)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationFailureCallsDisplayError() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+
+        XCTAssertEqual(view.displayErrorCalls, 1)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationFailureCallsDisplayErrorWithError() {
+
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+
+        XCTAssertEqual(view.displayErrorErrors.first as? URLError, error)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationFailureLoadsDefaultLocationWeather() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+
+        XCTAssertEqual(useCase.getGeographicWeatherForCoordinates.first, GeographicLocation.defaultCoordinates)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationFailureAndLoadDefaultLocationWeatherSuccessDisplaysDefaultLocationWeather() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+        useCase.getGeographicWeatherForCompletions.first?(.success(mokedModel))
+
+        XCTAssertNotNil(view.configureWithModelModels.first)
+    }
+
+    func test_presenter_onReloadData_onLoadCurrentLocationFailureAndLoadDefaultLocationWeatherFailureDisplaysError() {
+
+        let useCase = UseCase()
+        let view = View()
+        let sut = makeSut(view: view, useCase: useCase)
+
+        sut.reloadData()
+        useCase.getCurrentLocationCompletions.first?(.failure(error))
+        useCase.getGeographicWeatherForCompletions.first?(.failure(error))
+
+        XCTAssertEqual(view.displayErrorErrors.last as? URLError, error)
     }
 }

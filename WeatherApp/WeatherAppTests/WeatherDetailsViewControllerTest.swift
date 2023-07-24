@@ -30,6 +30,11 @@ class WeatherDetailsViewControllerTest: XCTestCase {
             loadDataForIconNamedNames.append(name)
             loadDataForIconNamedComplition.append(complition)
         }
+
+        var reloadDataCalls: Int = 0
+        func reloadData() {
+            reloadDataCalls += 1
+        }
     }
 
     func makeSut(descriptionViewModel: WeatherDescriptionViewModel? = nil,
@@ -233,5 +238,42 @@ class WeatherDetailsViewControllerTest: XCTestCase {
         sut.shareView.button.sendActions(for: .touchUpInside)
         
         XCTAssertTrue(presenter.wetherShareTriggered)
+    }
+
+    func test_viewController_renderEmptyScreenView() {
+        let sut = makeSut()
+
+        sut.loadViewIfNeeded()
+        sut.displayEmptyScreen()
+        XCTAssertFalse(sut.emptyView.isHidden)
+    }
+
+    func test_viewController_hideEmptyScreenViewAfterConfigure() {
+        let sut = makeSut()
+
+        sut.loadViewIfNeeded()
+        sut.displayEmptyScreen()
+
+        let model = WeatherDetailsViewModel(title: nil,
+                                            weatherDescription: nil,
+                                            wetherParameters: [])
+
+        sut.configure(with: model)
+
+        XCTAssertTrue(sut.emptyView.isHidden)
+    }
+
+    func test_viewController_triggerReloadForEmptyView() {
+
+        let presenter = Presenter()
+        let sut = makeSut(presenter: presenter)
+
+        sut.loadViewIfNeeded()
+
+        sut.displayEmptyScreen()
+
+        let descriprion = sut.emptyView.gestureRecognizers!.first!.description
+
+        XCTAssertTrue(descriprion.contains("action=emptyViewDidTapWithSender:, target=<WeatherApp.WeatherDetailsViewController"))
     }
 }
